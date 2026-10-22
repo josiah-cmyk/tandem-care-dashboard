@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Tandem Care Dashboard, CenterWell</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--FONTS--><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap"><!--/FONTS-->
+<style>
+/* Layout: CenterWell navy header band with tabs, then a 12-column working grid: scorecard, ranked actions, then one region per leadership question. Drill panel slides in from the right. */
+:root{
+  --ground:#F1F5F8; --surface:#FFFFFF; --surface-2:#F5F8FA;
+  --shell:#0B3550; --shell-2:#124766; --shell-ink:#F3F8FB; --shell-muted:#A9C4D6; --shell-org:#7FD3F0;
+  --ink:#0F2230; --ink-2:#425665; --muted:#5D707E; --line:#D7E1E8; --line-2:#C2CFD9;
+  --accent:#00739A; --accent-ink:#FFFFFF; --accent-wash:#E1F1F7; --accent-hover:#005C7C;
+  --s1:#0094C4; --s2:#eb6834; --s3:#1baf7a; --grid:#E3EAEF; --axis:#BFCBD4; --dot-muted:#A6B4BE;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --good-wash:#E2F3E0; --warn-wash:#FCF0D2; --serious-wash:#FBE5DB; --crit-wash:#F8DFDE;
+  --good-ink:#0A5A0A; --warn-ink:#6E4A00; --serious-ink:#86381A; --crit-ink:#992020;
+  --zone:#FBEDE6; --scrim:rgba(15,34,48,.36); --shadow:0 12px 32px rgba(15,34,48,.16);
+  --font:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:8px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0C141A; --surface:#131E26; --surface-2:#18252E;
+  --shell:#08202F; --shell-2:#0F3247; --shell-ink:#EAF3F8; --shell-muted:#8FB0C4; --shell-org:#6CCBEC;
+  --ink:#E6EEF3; --ink-2:#B4C3CD; --muted:#8B9DA9; --line:#25343E; --line-2:#33444F;
+  --accent:#4FC3E8; --accent-ink:#06202C; --accent-wash:#12303D; --accent-hover:#74D1EE;
+  --s1:#2BB0DF; --s2:#d95926; --s3:#199e70; --grid:#20303A; --axis:#374852; --dot-muted:#5A6A74;
+  --good-wash:#14301A; --warn-wash:#332A12; --serious-wash:#3A241A; --crit-wash:#3B1C1C;
+  --good-ink:#7FD67F; --warn-ink:#F4C766; --serious-ink:#F2A585; --crit-ink:#F19A9A;
+  --zone:#2A1F1A; --scrim:rgba(0,0,0,.55); --shadow:0 12px 32px rgba(0,0,0,.5);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --ground:#0C141A; --surface:#131E26; --surface-2:#18252E;
+  --shell:#08202F; --shell-2:#0F3247; --shell-ink:#EAF3F8; --shell-muted:#8FB0C4; --shell-org:#6CCBEC;
+  --ink:#E6EEF3; --ink-2:#B4C3CD; --muted:#8B9DA9; --line:#25343E; --line-2:#33444F;
+  --accent:#4FC3E8; --accent-ink:#06202C; --accent-wash:#12303D; --accent-hover:#74D1EE;
+  --s1:#2BB0DF; --s2:#d95926; --s3:#199e70; --grid:#20303A; --axis:#374852; --dot-muted:#5A6A74;
+  --good-wash:#14301A; --warn-wash:#332A12; --serious-wash:#3A241A; --crit-wash:#3B1C1C;
+  --good-ink:#7FD67F; --warn-ink:#F4C766; --serious-ink:#F2A585; --crit-ink:#F19A9A;
+  --zone:#2A1F1A; --scrim:rgba(0,0,0,.55); --shadow:0 12px 32px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;margin:0}
+::selection{background:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+#d-title:focus{outline:none}
+button{font:inherit;color:inherit}
+a{color:var(--accent);text-underline-offset:3px}
+.num{font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--shell)}
+
+/* Header */
+.shell{background:var(--shell);color:var(--shell-ink);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.shell-in{max-width:1360px;margin:0 auto;padding-block:20px 0}
+.brandrow{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.brand h1{margin:0;font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.01em}
+.brand p{margin:4px 0 0;color:var(--shell-muted);font-size:14.5px}
+.brand .org{margin:0 0 4px;color:var(--shell-org);font-weight:700;font-size:15px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--shell-muted);align-items:center}
+.meta strong{color:var(--shell-ink);font-weight:600}
+.mock{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 10px;color:var(--shell-ink);font-size:12.5px}
+.tabs{display:flex;gap:4px;margin-top:16px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{appearance:none;border:0;background:transparent;color:var(--shell-muted);padding:10px 14px 12px;font-size:14.5px;font-weight:600;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap}
+.tab:hover{color:var(--shell-ink);background:var(--shell-2)}
+.tab[aria-selected="true"]{background:var(--ground);color:var(--ink)}
+
+/* Page */
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1360px;margin:0 auto;display:grid;gap:20px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}.span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}
+@media (max-width:1080px){.span-8,.span-7,.span-6,.span-5,.span-4{grid-column:span 12}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px 20px;min-width:0}
+.region-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;margin:10px 0 -6px}
+.region-head h2{margin:0;font-size:19px;line-height:1.25;font-weight:800;letter-spacing:-.005em;text-wrap:balance}
+.region-head p{margin:0;color:var(--muted);font-size:13.5px}
+.panel h3{margin:0 0 2px;font-size:15.5px;font-weight:700;line-height:1.3}
+.panel .sub{margin:0 0 14px;color:var(--muted);font-size:14.5px;max-width:70ch}
+.panel-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+
+/* Status chips */
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px 2px 6px;font-size:13px;font-weight:600;white-space:nowrap;line-height:1.5}
+.chip svg{width:14px;height:14px;flex:none}
+.chip.good{background:var(--good-wash);color:var(--good-ink)}.chip.good svg{color:var(--good)}
+.chip.warn{background:var(--warn-wash);color:var(--warn-ink)}.chip.warn svg{color:#C98500}
+.chip.serious{background:var(--serious-wash);color:var(--serious-ink)}.chip.serious svg{color:var(--serious)}
+.chip.crit{background:var(--crit-wash);color:var(--crit-ink)}.chip.crit svg{color:var(--crit)}
+
+/* Scorecard */
+.score{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:0;overflow:hidden;row-gap:0}
+.kpi{position:relative;display:grid;grid-row:span 5;grid-template-rows:subgrid;row-gap:6px;align-items:start;padding:16px 16px 14px;border-left:1px solid var(--line);min-width:0}
+.kpi:first-child{border-left:0}
+.kpi:hover{background:var(--surface-2)}
+.kpi .k-label{font-size:14px;color:var(--ink-2);line-height:1.3;align-self:end}
+.kpi .k-main{appearance:none;border:0;background:none;padding:0;text-align:left;cursor:pointer;color:var(--ink);align-self:end}
+.kpi .k-main::after{content:"";position:absolute;inset:0}
+.kpi .k-main:focus-visible{outline:none}
+.kpi .k-main:focus-visible::after{outline:2px solid var(--accent);outline-offset:-3px;border-radius:6px}
+.kpi .k-val{font-size:27px;font-weight:800;line-height:1.05;letter-spacing:-.01em;display:block}
+.kpi .k-tlink{position:relative;z-index:1;appearance:none;border:0;background:none;padding:0;text-align:left;cursor:pointer;font-size:13.5px;color:var(--accent);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;line-height:1.35}
+.kpi .k-tlink:hover{text-decoration-style:solid}
+.kpi .chip{justify-self:start;align-self:end}
+.kpi .k-period{font-size:12.5px;color:var(--muted);line-height:1.35}
+.kpi .k-label{position:relative;z-index:1;appearance:none;border:0;background:none;padding:0;text-align:left;cursor:pointer;font:inherit;font-size:14px}
+.kpi .k-label:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.defs tr.hl td{background:var(--accent-wash)}
+.defs tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--accent)}
+.defs tr.hl.pulse td{animation:rowpulse .7s ease-in-out 3}
+@keyframes rowpulse{0%,100%{background:var(--accent-wash)}50%{background:var(--surface)}}
+.defs tr.hl.pulse td:first-child b{animation:namepop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes namepop{0%{color:var(--accent)}100%{color:inherit}}
+.backbtn{position:fixed;z-index:30;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow);transform:translateY(12px);opacity:0;transition:opacity .2s ease,transform .2s ease}
+.backbtn.on{transform:none;opacity:1}
+.basis{display:inline-block;font-size:12px;font-weight:700;border-radius:4px;padding:1px 6px;white-space:nowrap;margin-bottom:4px}
+.basis.std{background:var(--good-wash);color:var(--good-ink)}
+.basis.bench{background:var(--accent-wash);color:var(--accent)}
+.basis.local{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line-2)}
+.basis.ph{background:var(--warn-wash);color:var(--warn-ink)}
+.kpi .k-val small{font-size:14px;font-weight:600;color:var(--muted);margin-left:2px;letter-spacing:0}
+@media (max-width:1240px){.score{grid-template-columns:repeat(3,minmax(0,1fr))}.kpi:nth-child(3n+1){border-left:0}.kpi:nth-child(n+4){border-top:1px solid var(--line)}}
+@media (max-width:560px){.score{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{border-left:1px solid var(--line)}.kpi:nth-child(2n+1){border-left:0}.kpi:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* Actions */
+.actions{list-style:none;margin:0;padding:0;display:grid}
+.act{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:4px 14px;align-items:start;padding:14px 0;border-top:1px solid var(--line)}
+.act:first-child{border-top:0;padding-top:4px}
+.rank{width:26px;height:26px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line-2);display:grid;place-items:center;font-weight:800;font-size:13.5px;color:var(--ink-2)}
+.act-title{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-weight:700;font-size:15.5px}
+.act-why{margin:4px 0 0;color:var(--ink-2);font-size:15px;max-width:88ch}
+.act-meta{margin:6px 0 0;font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 16px}
+.act-meta b{color:var(--ink-2);font-weight:600}
+@media (max-width:640px){.act{grid-template-columns:30px minmax(0,1fr)}.act .btn{grid-column:2;justify-self:start;margin-top:6px}}
+
+.btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:7px 12px;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-wash)}
+.btn svg{width:14px;height:14px}
+.linkbtn{appearance:none;border:0;background:none;padding:0;color:var(--accent);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;font-size:inherit}
+.linkbtn:hover{text-decoration-thickness:2px}
+
+/* Funnel */
+.funnel{display:grid;gap:2px}
+.f-row{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr) 92px;gap:12px;align-items:center;min-height:34px}
+.f-label{font-size:15px;color:var(--ink-2);line-height:1.25}
+.f-track{height:20px;position:relative}
+.f-bar{height:100%;background:var(--s1);border-radius:0 4px 4px 0}
+.f-val{font-weight:700;font-size:14.5px;text-align:right}
+.f-val small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.f-head{font-size:14px;color:var(--ink-2);margin:0 0 10px}
+.f-leak{margin-left:202px;font-size:14px;color:var(--muted);padding:2px 0 4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.f-leak svg{width:12px;height:12px;color:var(--muted)}
+.f-leak.hot{color:var(--serious-ink)}
+@media (max-width:560px){.f-row{grid-template-columns:minmax(0,1fr) 76px}.f-label{grid-column:1 / 3}.f-leak{margin-left:0}}
+
+/* HBar lists */
+.hbars{display:grid;gap:10px}
+.hb{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 64px;gap:12px;align-items:center;appearance:none;border:0;background:none;padding:4px 6px;margin:0 -6px;border-radius:6px;text-align:left;cursor:pointer}
+.hb:hover{background:var(--surface-2)}
+.hb-name{font-size:15px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb-track{position:relative;height:18px}
+.hb-bar{position:absolute;left:0;top:2px;bottom:2px;border-radius:0 4px 4px 0;background:var(--s1)}
+.hb-band{position:absolute;top:-3px;bottom:-3px;background:var(--accent-wash);border-left:1px dashed var(--accent);border-right:1px dashed var(--accent)}
+.hb-tick{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);border-radius:1px}
+.hb-v{font-weight:700;font-size:14.5px;text-align:right}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--ink-2);margin:0 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
+.sw.ln{height:3px;border-radius:2px;width:16px}
+.sw.dot{border-radius:50%}
+.sw.ring{border-radius:50%;background:transparent!important;border:2px solid var(--ink)}
+
+/* Queues */
+.queue{list-style:none;margin:0;padding:0}
+.q{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.q:first-child{border-top:0;padding-top:0}
+.q-name{font-size:14.5px;font-weight:600}
+.q-note{font-size:14px;color:var(--muted);grid-column:1}
+.q-right{grid-row:1 / 3;grid-column:2;display:flex;align-items:center;gap:10px}
+.q-count{font-size:22px;font-weight:800;min-width:2.2ch;text-align:right}
+
+/* Charts */
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--font);fill:var(--muted);font-size:13.5px}
+.chart .lbl{fill:var(--ink-2);font-weight:600}
+.chart .ink{fill:var(--ink)}
+.chart .halo{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.t2t-actions{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-size:14px}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:14px 20px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.stat b{display:block;font-size:22px;font-weight:800;line-height:1.1}
+.stat span{font-size:14px;color:var(--muted)}
+
+/* Bullets (quality) */
+.bullets{display:grid;gap:12px}
+.bl{display:grid;grid-template-columns:minmax(0,210px) minmax(0,1fr) 100px;gap:12px;align-items:center;appearance:none;border:0;background:none;text-align:left;padding:4px 6px;margin:0 -6px;border-radius:6px;cursor:pointer}
+.bl:hover{background:var(--surface-2)}
+.bl-name{font-size:15px;color:var(--ink-2);line-height:1.25}
+.bl-name small{display:block;color:var(--muted);font-size:13px}
+.bl-track{position:relative;height:14px;background:var(--grid);border-radius:4px}
+.bl-bar{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--s1)}
+.bl-tgt{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink)}
+.bl-v{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.bl-v b{font-size:15px}
+@media (max-width:560px){.bl,.hb{grid-template-columns:minmax(0,1fr) 84px}.bl-name,.hb-name{grid-column:1 / 3}.bl-track,.hb-track{grid-column:1}}
+
+.mini-mult{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:4px}
+.mm{display:grid;grid-template-rows:auto auto auto;justify-items:center;text-align:center;min-width:0;padding:10px 4px 12px;border:1px solid var(--line);border-radius:6px}
+.mm h4{margin:0;font-size:14px;color:var(--ink-2);font-weight:700}
+.mm .chart{width:100%;max-width:170px}
+@media (max-width:560px){.mini-mult{grid-template-columns:1fr}.mm{grid-template-columns:auto;padding:10px 12px}.mm .chart{max-width:200px}}
+.mm .delta{font-size:14px;color:var(--good-ink);font-weight:700}
+.mm .delta small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.cost-foot{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
+.cost-foot b{color:var(--ink)}
+.stack{display:flex;flex-direction:column;gap:20px;min-width:0}
+.stack>.panel:last-child{flex:1}
+.hb.static{cursor:default}
+.hb.static:hover{background:none}
+.sched-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
+.mix{display:flex;height:16px;border-radius:4px;overflow:hidden;gap:2px;background:var(--surface)}
+.mix span{display:block;height:100%}
+.bl.sec .bl-name{color:var(--muted)}
+.scr{display:grid;gap:10px;margin:0 0 16px;padding:12px 14px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line)}
+.scr-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;align-items:baseline}
+.scr-h b{font-size:14.5px}
+.scr-h span{font-size:13px;color:var(--muted)}
+.sub-h{margin:0 0 8px;font-size:14.5px;font-weight:700}
+.sub-h span{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+.pfilter{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:end;margin:2px 0 12px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px}
+.pfilter label{display:grid;gap:3px;font-size:12.5px;color:var(--muted);font-weight:600}
+.pfilter select{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:6px;padding:5px 8px;min-width:130px}
+.pf-note{font-size:13px;color:var(--ink-2);margin-left:auto;align-self:center}
+.pf-note b{color:var(--accent)}
+.note{font-size:13.5px;color:var(--muted);margin:12px 0 0;max-width:80ch}
+
+/* Tooltip */
+#expStats{grid-template-columns:repeat(2,minmax(0,1fr))}
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--surface);padding:7px 10px;border-radius:6px;font-size:13px;line-height:1.35;max-width:260px;box-shadow:var(--shadow)}
+#tip b{font-weight:700}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:40;opacity:0;transition:opacity .2s ease}
+.scrim.on{opacity:1}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100vw);background:var(--surface);z-index:50;box-shadow:var(--shadow);display:flex;flex-direction:column;transform:translateX(102%);transition:transform .22s cubic-bezier(.16,1,.3,1);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer.on{transform:none}
+.d-head{padding:16px 20px 14px;border-bottom:1px solid var(--line);display:grid;gap:6px}
+.crumbs{display:flex;flex-wrap:wrap;gap:4px;font-size:13px;color:var(--muted);align-items:center}
+.crumbs button{appearance:none;border:0;background:none;padding:0;color:var(--accent);font-weight:600;cursor:pointer;font-size:13px}
+.crumbs .sep{color:var(--line-2)}
+.d-title{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.d-title h2{margin:0;font-size:19px;font-weight:800;line-height:1.25;text-wrap:balance}
+.x{appearance:none;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;flex:none}
+.x:hover{background:var(--surface-2)}
+.x svg{width:16px;height:16px}
+.d-body{overflow:auto;padding:16px 20px 28px;display:grid;gap:16px;align-content:start;grid-auto-rows:max-content;flex:1;min-height:0}
+.d-lead{margin:0;color:var(--ink-2);font-size:14.5px;max-width:70ch}
+.d-step{background:var(--accent-wash);border-radius:6px;padding:10px 12px;font-size:14px}
+.d-step b{display:block;font-size:13px;color:var(--accent);margin-bottom:2px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:9px 10px;text-align:left;vertical-align:top;border-top:1px solid var(--line)}
+thead th{border-top:0;background:var(--surface-2);font-weight:700;color:var(--ink-2);font-size:13.5px;white-space:nowrap}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--surface-2)}
+tr.click td:first-child{color:var(--accent);font-weight:700}
+td:first-child{white-space:nowrap}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px 16px}
+.kv div span{display:block;font-size:12.5px;color:var(--muted)}
+.kv div b{font-size:15px}
+
+/* Definitions & assumptions */
+.doc{max-width:1360px;margin:0 auto;display:grid;gap:20px}
+.doc .panel p,.doc .panel li{max-width:78ch}
+.doc h2{margin:0 0 6px;font-size:20px;font-weight:800}
+.doc h3{margin:18px 0 6px;font-size:16px}
+.defs td{min-width:120px}
+.defs td:nth-child(1){white-space:normal;min-width:240px;width:260px}.defs td:nth-child(2){min-width:280px}.defs td:nth-child(3){min-width:120px}.defs td:nth-child(4){min-width:220px}
+.basis-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin-top:6px}.basis-wrap .basis{margin:0}.basis-note{font-size:12.5px;color:var(--muted);line-height:1.3}
+.qtag{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-wash);border-radius:4px;padding:1px 6px;white-space:nowrap}
+.filterbar{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+.fbtn{appearance:none;border:1px solid var(--line-2);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13.5px;cursor:pointer;font-weight:600;color:var(--ink-2)}
+.fbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.cad{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.cad div{border-top:3px solid var(--accent);padding-top:10px}
+.cad h4{margin:0 0 4px;font-size:15px}
+.cad p{margin:0;font-size:14px;color:var(--ink-2)}
+.formula{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:14px}
+footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{.tabs,.btn,.x{display:none}}
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-good" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="M4.8 8.2l2.1 2.1 4.3-4.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 16 16"><path d="M8 1.5l7 12.5H1z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M8 6v3.6" stroke="#3a2a00" stroke-width="1.7" stroke-linecap="round"/><circle cx="8" cy="11.8" r="1" fill="#3a2a00"/></symbol>
+  <symbol id="i-serious" viewBox="0 0 16 16"><rect x="2.6" y="2.6" width="10.8" height="10.8" rx="1.6" transform="rotate(45 8 8)" fill="currentColor"/><path d="M8 4.9v3.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#fff"/></symbol>
+  <symbol id="i-crit" viewBox="0 0 16 16"><path d="M5.1 1h5.8L15 5.1v5.8L10.9 15H5.1L1 10.9V5.1z" fill="currentColor"/><path d="M8 4.4v4.4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.4" r="1.05" fill="#fff"/></symbol>
+  <symbol id="i-open" viewBox="0 0 16 16"><path d="M6 3.5L10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 2.5v10M3.8 8.6L8 12.8l4.2-4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="shell">
+  <div class="shell-in">
+    <div class="brandrow">
+      <div class="brand">
+        <p class="org">CenterWell Senior Primary Care</p>
+        <h1>Tandem Care</h1>
+        <p>Collaborative Care program performance, The Villages</p>
+      </div>
+      <div class="meta">
+        <span>Period <strong>Jul 1 to Sep 30, 2026</strong></span>
+        <span>Data as of <strong>Mon, Oct 19</strong></span>
+        <span class="mock">Interview mock-up, illustrative data</span>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Views">
+      <button class="tab" role="tab" id="tab-dashboard" aria-controls="view-dashboard" aria-selected="true" data-view="dashboard">Dashboard</button>
+      <button class="tab" role="tab" id="tab-definitions" aria-controls="view-definitions" aria-selected="false" data-view="definitions">Metric definitions</button>
+      <button class="tab" role="tab" id="tab-assumptions" aria-controls="view-assumptions" aria-selected="false" data-view="assumptions">Assumptions and use</button>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <!-- DASHBOARD -->
+  <section id="view-dashboard" role="tabpanel" aria-labelledby="tab-dashboard">
+    <div class="wrap">
+      <div class="panel score" id="scorecard" aria-label="Scorecard"></div>
+
+      <section class="panel" aria-labelledby="h-act">
+        <div class="panel-top">
+          <div>
+            <h3 id="h-act" style="margin-bottom:10px">Weekly Priorities Ranking</h3>
+          </div>
+          <button class="btn ghost" data-drill="rules">Automation rules<svg aria-hidden="true"><use href="#i-open"/></svg></button>
+        </div>
+        <ol class="actions" id="actions"></ol>
+      </section>
+
+      <div class="region-head"><h2>Are patients getting in and moving through care?</h2><p>Access and the referral funnel</p></div>
+      <div class="grid">
+        <section class="panel span-7" aria-labelledby="h-fun">
+          <h3 id="h-fun">Screening to follow-up</h3>
+          <p class="sub">Each bar is patients who reached that step. The gaps between steps are where patients drop out of care.</p>
+          <div class="funnel" id="funnel"></div>
+        </section>
+        <div class="span-5 stack">
+        <section class="panel" aria-labelledby="h-wait">
+          <h3 id="h-wait">Days from referral to initial assessment</h3>
+          <p class="sub">Median by care manager, referrals Jul 1 to Sep 30, 2026. Target is 14 days or less (black tick).</p>
+          <div class="hbars" id="waits"></div>
+          <div class="stat-row" id="accessStats"></div>
+        </section>
+        <section class="panel" aria-labelledby="h-sched">
+          <h3 id="h-sched">Scheduling and attendance</h3>
+          <p class="sub">Initial assessments, Jul 1 to Sep 30, 2026.</p>
+          <div class="sched-stats"><div class="stat"><b class="num">138</b><span>Scheduled</span></div><div class="stat"><b class="num">121</b><span>Completed</span></div><div class="stat"><b class="num">12%</b><span>No-show rate, target under 10%</span></div></div>
+          <p class="sub-h" style="margin-top:14px">How visits happened</p>
+          <div class="mix" role="img" aria-label="Visit type: 48% in person, 37% phone, 15% video"><span style="width:48%;background:var(--s1)" data-tip="<b>In person</b><br>48% of completed assessments"></span><span style="width:37%;background:var(--s2)" data-tip="<b>Phone</b><br>37% of completed assessments"></span><span style="width:15%;background:var(--s3)" data-tip="<b>Video</b><br>15% of completed assessments"></span></div>
+          <div class="legend" style="margin:8px 0 0"><span><i class="sw" style="background:var(--s1)"></i>In person 48%</span><span><i class="sw" style="background:var(--s2)"></i>Phone 37%</span><span><i class="sw" style="background:var(--s3)"></i>Video 15%</span></div>
+          <p class="sub-h" style="margin-top:16px">No-show rate by visit type<span>Target under 10% (black tick)</span></p>
+          <div class="hbars" id="noshow"></div>
+        </section>
+        </div>
+      </div>
+
+      <div class="region-head"><h2>Where is care getting stuck?</h2><p>Treat-to-target registry and open work</p></div>
+      <div class="grid">
+        <section class="panel span-8" aria-labelledby="h-t2t">
+          <div class="panel-top">
+            <div>
+              <h3 id="h-t2t">Treat-to-target: every active patient</h3>
+              <p class="sub">Active patients as of Oct 19, 2026. Change in PHQ-9 from baseline by weeks in care. Patients in the shaded zone are 10+ weeks in and haven't improved 50%. They need a treatment change and a psychiatric case review.</p>
+            </div>
+          </div>
+          <div class="pfilter" id="pfilter" role="group" aria-label="Filter patients"><label for="f-age">Age band<select id="f-age"><option value="">All ages</option><option value="65">65 to 74</option><option value="75">75 to 84</option><option value="85">85 and older</option></select></label><label for="f-dual">Coverage<select id="f-dual"><option value="">All</option><option value="1">Dual eligible</option><option value="0">Medicare only</option></select></label><label for="f-alone">Living situation<select id="f-alone"><option value="">All</option><option value="1">Lives alone</option><option value="0">Lives with others</option></select></label><label for="f-cog">Cognitive screen<select id="f-cog"><option value="">All</option><option value="1">Positive</option><option value="0">Negative</option></select></label><span class="pf-note" id="pfNote"></span></div>
+          <div class="legend" id="t2tLegend"></div>
+          <div id="t2t"></div>
+          <div class="t2t-actions" id="t2tActions"></div>
+        </section>
+        <section class="panel span-4" aria-labelledby="h-q">
+          <h3 id="h-q">Open work queues</h3>
+          <p class="sub">Open as of Oct 19, 2026. Items past their standard. Open one to see the owner and the patients.</p>
+          <ul class="queue" id="queues"></ul>
+        </section>
+      </div>
+
+      <div class="region-head"><h2>Is team capacity keeping up with demand?</h2><p>Caseload, flow, and psychiatry time</p></div>
+      <div class="grid">
+        <section class="panel span-6" aria-labelledby="h-cl">
+          <h3 id="h-cl">Active caseload by care manager</h3>
+          <p class="sub">Active patients as of Oct 19, 2026. Shaded band is the target range of 60 to 80 per full-time care manager.</p>
+          <div class="hbars" id="caseload"></div>
+          <div class="stat-row" id="capStats"></div>
+        </section>
+        <section class="panel span-6" aria-labelledby="h-flow">
+          <h3 id="h-flow">New referrals vs. discharges per week</h3>
+          <p class="sub">Weekly, Jul 6 to Sep 21, 2026. When referrals run above discharges, the caseload grows and waits get longer.</p>
+          <div class="legend"><span><i class="sw ln" style="background:var(--s1)"></i>Referrals</span><span><i class="sw ln" style="background:var(--s2)"></i>Discharges</span></div>
+          <div id="flow"></div>
+          <p class="note" id="flowNote"></p>
+        </section>
+      </div>
+
+      <div class="region-head"><h2>Are patients getting better, safely, at lower cost?</h2><p>Outcomes, quality, cost, experience, and Star Ratings</p></div>
+      <div class="grid">
+        <section class="panel span-7" aria-labelledby="h-out">
+          <h3 id="h-out">Clinical outcomes, safety, and experience</h3>
+          <p class="sub">Bar is the current rate. Black tick is the target. Select a measure to see open gaps. Each measure lists its time period.</p>
+          <div class="bullets" id="bullets"></div>
+          <p class="note">AMM is shown as a secondary measure because the National Committee for Quality Assurance (NCQA) is retiring it from health plan ratings.</p>
+        </section>
+        <div class="span-5 stack">
+          <section class="panel" aria-labelledby="h-tcoc">
+            <div class="panel-top">
+              <div>
+                <h3 id="h-tcoc">Cost and utilization</h3>
+                <p class="sub">12 months ending Sep 30, 2026. Patients enrolled 6+ months vs. a matched group who screened positive and didn't enroll.</p>
+              </div>
+              <button class="btn ghost" data-drill="tcoc">High-cost patients<svg aria-hidden="true"><use href="#i-open"/></svg></button>
+            </div>
+            <div class="legend" style="margin-top:12px"><span><i class="sw" style="background:var(--s1)"></i>Enrolled (n=184)</span><span><i class="sw" style="background:var(--dot-muted)"></i>Matched, not enrolled (n=368)</span></div>
+            <div class="mini-mult" id="tcoc"></div>
+            <div class="cost-foot"><span>Cost difference <b>7.6% lower</b>, likely range 1.2% to 13.8% lower</span><span>Updated quarterly. Claims lag about 30 days.</span></div>
+          </section>
+          <section class="panel" aria-labelledby="h-stars">
+            <h3 id="h-stars">Medicare Star Ratings link</h3>
+            <p class="sub">DSF-E becomes a Star measure in measurement year 2027. Improving or Maintaining Mental Health is triple-weighted in the 2027 Star Ratings. Targets are placeholders until set with the Humana Stars team.</p>
+            <div class="bullets" id="stars"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEFINITIONS -->
+  <section id="view-definitions" role="tabpanel" aria-labelledby="tab-definitions" hidden>
+    <div class="doc">
+      <div class="panel">
+        <h2>Metric definitions and rationale</h2>
+        <p class="sub" style="margin-bottom:10px">Every metric on the dashboard, how it's calculated, the target, and why it earns a spot. Metrics follow the University of Washington Advancing Integrated Mental Health Solutions (AIMS) Center Collaborative Care measures, Centers for Medicare and Medicaid Services (CMS) requirements for the Collaborative Care Model, and the Healthcare Effectiveness Data and Information Set (HEDIS) behavioral health measures that count toward Medicare Advantage Star Ratings.</p>
+        <div class="filterbar" id="defFilter" role="group" aria-label="Filter by question"></div>
+        <div class="tbl-wrap"><table class="defs"><thead><tr><th>Metric</th><th>Definition</th><th>Target</th><th>Metric Purpose</th><th>Question</th><th>Source</th><th>Drills to</th></tr></thead><tbody id="defBody"></tbody></table></div>
+      </div>
+      <div class="panel">
+        <h2>Abbreviations</h2>
+        <div class="tbl-wrap"><table><tbody id="abbrBody"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSUMPTIONS -->
+  <section id="view-assumptions" role="tabpanel" aria-labelledby="tab-assumptions" hidden>
+    <div class="doc" id="assumeDoc"></div>
+  </section>
+  <footer class="foot">Interview mock-up prepared by Josiah Golles. Not an official CenterWell or Humana tool. All patients, providers, and figures are fictional and illustrative.</footer>
+</main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="d-title" hidden>
+  <div class="d-head">
+    <nav class="crumbs" id="crumbs" aria-label="Drill path"></nav>
+    <div class="d-title"><h2 id="d-title" tabindex="-1"></h2><button class="x" id="dClose" aria-label="Close panel"><svg><use href="#i-x"/></svg></button></div>
+  </div>
+  <div class="d-body" id="dBody"></div>
+</aside>
+<div id="tip" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+var rnd=mulberry32(20261019);
+function ri(a,b){return a+Math.floor(rnd()*(b-a+1));}
+function pick(arr){return arr[Math.floor(rnd()*arr.length)];}
+function wpick(arr,w){var s=0,i,r=rnd()*w.reduce(function(x,y){return x+y;},0);for(i=0;i<arr.length;i++){s+=w[i];if(r<=s)return arr[i];}return arr[arr.length-1];}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+var $=function(id){return document.getElementById(id);};
+var ASOF=new Date(2026,9,19);
+function daysAgo(n){var d=new Date(ASOF);d.setDate(d.getDate()-n);return d;}
+var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmtD(d){return MON[d.getMonth()]+" "+d.getDate();}
+function pct(n,d){return d?Math.round(100*n/d):0;}
+var ICON={good:"i-good",warn:"i-warn",serious:"i-serious",crit:"i-crit"};
+var LABEL={good:"On target",warn:"Watch",serious:"Off target",crit:"Act now"};
+function chip(s,label){return '<span class="chip '+s+'"><svg aria-hidden="true"><use href="#'+ICON[s]+'"/></svg>'+esc(label||LABEL[s])+'</span>';}
+
+/* ---------- people ---------- */
+var PCPS=["Dr. Elena Alvarez","Dr. Marcus Whitfield","Dr. Priya Raman","Dr. Daniel Okafor","Dr. Susan Hale","Dr. James Kowalski","Kim Tran, APRN","Robert Lindqvist, PA-C"];
+var BHCM=[
+  {name:"Karen Moreno, LCSW",short:"K. Moreno",n:84,first:9,assess:21,mbc:69,overdue:9,unreached:11,resp:39,waiting:14},
+  {name:"Devon Price, LCSW",short:"D. Price",n:71,first:6,assess:15,mbc:78,overdue:6,unreached:7,resp:47,waiting:7},
+  {name:"Alicia Ng, LCSW",short:"A. Ng",n:66,first:5,assess:13,mbc:81,overdue:5,unreached:6,resp:52,waiting:5},
+  {name:"Thomas Brooks, LCSW",short:"T. Brooks",n:58,first:4,assess:10,mbc:84,overdue:3,unreached:5,resp:55,waiting:3}
+];
+var PSYCH="Dr. Nadia Farouk (psychiatric consultant, 0.5 FTE)";
+
+/* ---------- active caseload (synthetic) ---------- */
+var usedIds={};
+function newId(){var id;do{id="TC-"+ri(40100,59980);}while(usedIds[id]);usedIds[id]=1;return id;}
+var DX=["Depression","Depression and anxiety"];
+var patients=[];
+BHCM.forEach(function(b,bi){
+  for(var k=0;k<b.n;k++){
+    var weeks=Math.max(1,Math.round(Math.pow(rnd(),0.85)*36));
+    var base=ri(10,22);
+    var rt=rnd(), f;
+    var strong=bi===0?0.58:0.68, partial=0.22;
+    if(rt<strong) f=0.55+rnd()*0.42; else if(rt<strong+partial) f=0.18+rnd()*0.3; else f=-0.12+rnd()*0.25;
+    var ramp=Math.min(1,weeks/13);
+    var change=Math.round(Math.max(-100,Math.min(25,-(f*ramp*100)+(rnd()*16-8))));
+    var cur=Math.max(0,Math.round(base*(1+change/100)));
+    if(cur<5&&change>-50)cur=5;
+    var review=weeks<3?null:(rnd()<0.08?null:ri(1,Math.min(11,weeks)));
+    patients.push({id:newId(),age:ri(66,91),sex:rnd()<0.6?"F":"M",bh:bi,pcp:wpick([0,1,2,3,4,5,6,7],[14,10,13,10,11,14,12,11]),dx:wpick(DX,[60,40]),weeks:weeks,base:base,cur:cur,change:change,last:ri(2,27),review:review,gad:ri(5,16),iso:rnd()<0.34,cog:rnd()<0.11});
+  }
+});
+// overdue contacts
+BHCM.forEach(function(b,bi){shuffle(patients.filter(function(p){return p.bh===bi&&p.weeks>=4;})).slice(0,b.overdue).forEach(function(p){p.last=ri(31,58);});});
+function state(p){if(p.cur<5)return "rem";if(p.change<=-50)return "resp";if(p.weeks>=10)return "off";return "early";}
+function hsh(id,k){var n=parseInt(id.slice(3),10)*(k*7919+1);return ((n*9301+49297)%233280)/233280;}
+patients.forEach(function(p){p.st=state(p);p.needsReview=p.st==="off"&&(p.review===null||p.review>8);p.jx=(hsh(p.id,1)-.5)*0.7;p.dual=hsh(p.id,2)<0.18;p.alone=hsh(p.id,3)<0.36;});
+var PF={age:"",dual:"",alone:"",cog:""};
+function pf(p){if(PF.age){var a=+PF.age;if(a===85?p.age<85:(p.age<a||p.age>a+9))return false;}if(PF.dual!==""&&(p.dual?"1":"0")!==PF.dual)return false;if(PF.alone!==""&&(p.alone?"1":"0")!==PF.alone)return false;if(PF.cog!==""&&(p.cog?"1":"0")!==PF.cog)return false;return true;}
+function pfOn(){return !!(PF.age||PF.dual!==""||PF.alone!==""||PF.cog!=="");}
+function pfLabel(){var l=[];if(PF.age)l.push(PF.age==="85"?"85 and older":PF.age+" to "+(+PF.age+9));if(PF.dual!=="")l.push(PF.dual==="1"?"dual eligible":"Medicare only");if(PF.alone!=="")l.push(PF.alone==="1"?"lives alone":"lives with others");if(PF.cog!=="")l.push(PF.cog==="1"?"positive cognitive screen":"negative cognitive screen");return l.join(", ");}
+function FP(a){return a.filter(pf);}
+function fl(){return pfOn()?" Filtered to "+pfLabel()+".":"";}
+// psychiatric recommendations open >14 days
+var RECS=["Increase sertraline from 50 to 100 mg daily","Switch citalopram to sertraline (QTc risk above 20 mg after age 60)","Add mirtazapine 7.5 mg at bedtime for sleep and appetite","Begin lorazepam taper (Beers Criteria, fall risk)","Add bupropion XL 150 mg as augmentation","Check TSH and B12 before next medication change","Reduce paroxetine and cross-taper to escitalopram (anticholinergic load)","Increase escitalopram from 5 to 10 mg daily","Refer to psychologist for problem-solving therapy","Stop trazodone 100 mg, start 50 mg (orthostatic dizziness)"];
+var recCounts=[[0,5],[3,3],[1,2],[6,1],[4,1]];
+var recs=[];
+recCounts.forEach(function(rc){
+  var pool=shuffle(patients.filter(function(p){return p.weeks>=6&&!p.rec&&(p.st==="off"||p.st==="early");}));
+  pool.slice(0,rc[1]).forEach(function(p){p.pcp=rc[0];var open=ri(15,41);p.rec={text:pick(RECS),open:open,made:daysAgo(open)};recs.push(p);});
+});
+// item 9 safety miss
+var safetyP=patients.filter(function(p){return p.bh===1&&p.weeks>=3&&p.weeks<=8&&!p.rec;})[0];
+safetyP.safety={date:daysAgo(5),item9:"More than half the days",phq:safetyP.cur};safetyP.last=5;
+// derived counts
+function count(fn){return patients.filter(fn).length;}
+var N=patients.length;
+var offN=count(function(p){return p.st==="off";});
+var reviewN=count(function(p){return p.needsReview;});
+var overdueN=count(function(p){return p.last>30;});
+BHCM.forEach(function(b,bi){
+  b.ps=patients.filter(function(p){return p.bh===bi;});
+  b.off=b.ps.filter(function(p){return p.st==="off";}).length;
+  b.rev=b.ps.filter(function(p){return p.needsReview;}).length;
+  b.newM=b.ps.filter(function(p){return p.weeks<=4;}).length;
+  b.rem=b.ps.filter(function(p){return p.st==="rem";}).length;
+});
+
+/* ---------- funnel + referral data ---------- */
+var FUN=[
+    {k:"Positive (PHQ-9 or GAD-7 of 10+)",n:214},
+  {k:"Referred to Tandem Care",n:168,leak:{n:46,txt:"positive screens not referred",drill:"notref",hot:true}},
+  {k:"Reached by care manager",n:139,leak:{n:29,txt:"unreached after 3 attempts",drill:"unreached",hot:true}},
+  {k:"Enrolled (initial assessment)",n:121,leak:{n:18,txt:"reached, declined or still waiting",drill:"wait"}},
+  {k:"First follow-up within 30 days",n:104,leak:{n:17,txt:"no follow-up yet",drill:"overdue"}},
+  {k:"Follow-up with PHQ-9 or GAD-7 scored",n:88,leak:{n:16,txt:"follow-up without a symptom score",drill:"mbc"}}
+];
+var POS=[30,31,27,26,25,28,24,23], NOTREF=[4,12,3,10,9,2,3,3];
+var ATTR=[520,480,530,470,500,540,490,490], SCR=[.84,.71,.82,.73,.74,.86,.80,.78];
+var scrN=ATTR.map(function(a,i){return Math.round(a*SCR[i]);});
+var attrT=ATTR.reduce(function(a,b){return a+b;},0), scrT=scrN.reduce(function(a,b){return a+b;},0);
+var DSF1=Math.round(100*scrT/attrT), DSF2=83, DSF=Math.round((DSF1+DSF2)/2);
+function genPeople(n,mk){var a=[];for(var i=0;i<n;i++)a.push(mk(i));return a;}
+var notRefList=[];
+PCPS.forEach(function(name,pi){for(var i=0;i<NOTREF[pi];i++){var phq=rnd()<0.75;notRefList.push({id:newId(),age:ri(66,90),pcp:pi,date:daysAgo(ri(6,100)),score:(phq?"PHQ-9 ":"GAD-7 ")+ri(10,19),visit:pick(["Annual wellness visit","Follow-up visit","Chronic care visit","Same-day visit"])});}});
+var unreachedList=[];
+BHCM.forEach(function(b,bi){for(var i=0;i<b.unreached;i++){var d=ri(12,80);unreachedList.push({id:newId(),age:ri(67,92),bh:bi,pcp:ri(0,7),ref:daysAgo(d),attempts:3,lastTry:daysAgo(Math.max(2,d-ri(6,12)))});}});
+var waitingList=[];
+BHCM.forEach(function(b,bi){for(var i=0;i<b.waiting;i++){var d=bi===0?ri(9,30):ri(4,19);waitingList.push({id:newId(),age:ri(66,90),bh:bi,pcp:ri(0,7),ref:daysAgo(d),days:d,booked:rnd()<0.6?fmtD(daysAgo(-ri(1,9))):"Not booked"});}});
+
+/* ---------- KPIs ---------- */
+var avgCase=Math.round(N/BHCM.length);
+var KPIS=[
+  {label:"Program reach (enrolled of eligible)",val:"46",unit:"%",tgt:"Stretch target 50%",s:"warn",drill:"notref",def:0,per:"12 months to Sep 30, 2026"},
+  {label:"Referral to initial assessment",val:"16",unit:"days",tgt:"Target 14 days or less",s:"serious",drill:"wait",def:2,per:"Referrals Jul to Sep 2026"},
+  {label:"Caseload per care manager",val:String(avgCase),unit:"avg",tgt:"Band 60 to 80, 1 above",s:"warn",drill:"caseload",def:13,per:"Active as of Oct 19, 2026"},
+  {label:"Response at 6 months",val:"48",unit:"%",tgt:"Target 50% or more",s:"warn",drill:"response",def:17,per:"Enrolled Jan to Mar 2026"},
+  {label:"Same-day suicide risk check",val:"97",unit:"%",tgt:"Target 100% (31 of 32)",s:"crit",drill:"safety",def:18,per:"Jul to Sep 2026"},
+  {label:"Cost PMPM vs. matched group",val:"−7.6",unit:"%",tgt:"Target 5% lower or better",s:"good",drill:"tcoc",def:3,per:"12 months to Sep 2026. Range \u22121% to \u221214%"}
+];
+$("scorecard").innerHTML=KPIS.map(function(k){return '<div class="kpi"><button class="k-label" data-def="'+k.def+'" title="See how this metric is defined">'+esc(k.label)+'</button><button class="k-main" data-drill="'+k.drill+'" aria-label="'+esc(k.label)+': '+k.val+' '+k.unit+'. Open details"><span class="k-val num">'+k.val+'<small>'+k.unit+'</small></span></button><button class="k-tlink" data-def="'+k.def+'" aria-label="'+esc(k.tgt)+'. See definition and target basis">'+esc(k.tgt)+'</button>'+chip(k.s)+'<span class="k-period">'+esc(k.per)+'</span></div>';}).join("");
+
+/* ---------- actions ---------- */
+var recByPcp=PCPS.map(function(_,i){return recs.filter(function(p){return p.pcp===i;}).length;});
+var ACTIONS=[
+  {s:"crit",t:"Review one missed same-day suicide risk assessment",why:"Patient "+safetyP.id+" answered PHQ-9 item 9 positive on "+fmtD(safetyP.safety.date)+" with no Columbia (C-SSRS) screen documented that day. Every positive item 9 needs a same-day risk assessment and safety plan.",owner:"Clinical lead and "+BHCM[safetyP.bh].short,when:"Today",drill:"safety",cta:"Open patient"},
+  {s:"serious",t:"Close "+recs.length+" psychiatric recommendations open more than 14 days",why:recByPcp[0]+" of the "+recs.length+" sit with Dr. Alvarez. Each one is a medication or treatment change the psychiatric consultant made that the PCP hasn't acted on, so the patient stays on a plan that isn't working.",owner:"Medical director",when:"Thursday huddle",drill:"recs",cta:"See by PCP"},
+  {s:"serious",t:"Route new referrals away from Karen Moreno for 30 days",why:"84 active patients (band is 60 to 80), a 21-day wait to assessment, and "+BHCM[0].overdue+" patients with no contact in 30+ days. Thomas Brooks is at 58 and can take the next 10 referrals.",owner:"Program delivery lead",when:"This week",drill:"caseload",cta:"See caseloads"},
+  {s:"warn",t:"Raise referral rates on three PCP panels",why:"Dr. Whitfield, Dr. Okafor, and Dr. Hale account for 31 of the 46 positive screens that never got a referral. Share the peer comparison at the provider meeting and set up warm handoffs at the visit.",owner:"Medical director",when:"Next provider meeting",drill:"notref",cta:"See by PCP"},
+  {s:"warn",t:"Protect psychiatric caseload review time",why:reviewN+" patients are 10+ weeks in without 50% improvement and no psychiatric review in 8 weeks. Dr. Farouk spends about 9 of her 20 weekly hours on caseload review. The Advancing Integrated Mental Health Solutions (AIMS) Center guide for four care managers is 8 to 12 hours, so protect a weekly review hour per care manager before adding psychiatry time.",owner:"Program delivery lead and medical director",when:"Next schedule cycle",drill:"review",cta:"See patients"}
+];
+$("actions").innerHTML=ACTIONS.map(function(a,i){return '<li class="act"><span class="rank num" aria-label="Priority '+(i+1)+'">'+(i+1)+'</span><div><div class="act-title">'+chip(a.s)+'<span>'+esc(a.t)+'</span></div><p class="act-why">'+esc(a.why)+'</p><p class="act-meta"><span>Owner <b>'+esc(a.owner)+'</b></span><span>When <b>'+esc(a.when)+'</b></span></p></div><button class="btn" data-drill="'+a.drill+'">'+esc(a.cta)+'<svg aria-hidden="true"><use href="#i-open"/></svg></button></li>';}).join("");
+
+/* ---------- funnel ---------- */
+var fmax=FUN[0].n;
+$("funnel").innerHTML='<div class="scr"><div class="scr-h"><b>Depression screening and follow-up (HEDIS DSF-E)</b><span>12 months to Sep 30, 2026. A Star Ratings measure from measurement year 2027.</span></div>'+
+  '<button class="bl" data-drill="screen" data-tip="<b>DSF-E rate 1</b><br>'+scrT.toLocaleString()+' of '+attrT.toLocaleString()+' attributed seniors screened"><span class="bl-name">Seniors screened<small>Rate 1, '+scrT.toLocaleString()+' of '+attrT.toLocaleString()+'</small></span><span class="bl-track"><span class="bl-bar" style="width:'+DSF1+'%"></span><span class="bl-tgt" style="left:80%"></span></span><span class="bl-v"><b class="num">'+DSF1+'%</b>'+chip(DSF1>=80?"good":"warn")+'</span></button>'+
+  '<button class="bl" data-drill="notref" data-tip="<b>DSF-E rate 2</b><br>Positive screens with follow-up care within 30 days"><span class="bl-name">Positives followed up in 30 days<small>Rate 2, any follow-up care</small></span><span class="bl-track"><span class="bl-bar" style="width:'+DSF2+'%"></span><span class="bl-tgt" style="left:80%"></span></span><span class="bl-v"><b class="num">'+DSF2+'%</b>'+chip(DSF2>=80?"good":"warn")+'</span></button></div>'+
+  '<p class="sub-h">Tandem Care referral funnel<span>Jul 1 to Sep 30, 2026</span></p>'+FUN.map(function(f,i){
+  var w=Math.max(2,100*f.n/fmax);
+  var conv=i===0?"":"<small>"+pct(f.n,FUN[i-1].n)+"% of prior</small>";
+  var leak="";
+  if(f.leak){leak='<div class="f-leak'+(f.leak.hot?' hot':'')+'"><svg aria-hidden="true"><use href="#i-down"/></svg><span class="num">'+f.leak.n+'</span> '+esc(f.leak.txt)+' <button class="linkbtn" data-drill="'+f.leak.drill+'">See who</button></div>';}
+  return '<div class="f-step">'+leak+'<div class="f-row"><span class="f-label">'+esc(f.k)+'</span><div class="f-track"><div class="f-bar" style="width:'+w.toFixed(1)+'%" data-tip="<b>'+esc(f.k)+'</b><br>'+f.n.toLocaleString()+' patients"></div></div><span class="f-val num">'+f.n.toLocaleString()+conv+'</span></div></div>';
+}).join("");
+
+/* ---------- waits ---------- */
+var wmax=28;
+$("waits").innerHTML=BHCM.map(function(b,i){
+  return '<button class="hb" data-drill="wait" data-arg="'+i+'" data-tip="<b>'+esc(b.name)+'</b><br>Median '+b.assess+' days to assessment<br>Median '+b.first+' days to first contact<br>'+b.waiting+' waiting now"><span class="hb-name">'+esc(b.short)+'</span><span class="hb-track"><span class="hb-bar" style="width:'+(100*b.assess/wmax)+'%;background:'+(b.assess>14?'var(--serious)':'var(--s1)')+'"></span><span class="hb-tick" style="left:'+(100*14/wmax)+'%"></span></span><span class="hb-v num">'+b.assess+'d</span></button>';
+}).join("");
+$("noshow").innerHTML=[["In person",9],["Phone",14],["Video",18]].map(function(r){return '<div class="hb static" data-tip="<b>'+r[0]+'</b><br>'+r[1]+'% no-show, Jul to Sep 2026"><span class="hb-name">'+r[0]+'</span><span class="hb-track"><span class="hb-bar" style="width:'+(100*r[1]/25)+'%;background:'+(r[1]>10?'var(--serious)':'var(--s1)')+'"></span><span class="hb-tick" style="left:40%"></span></span><span class="hb-v num">'+r[1]+'%</span></div>';}).join("");
+$("accessStats").innerHTML='<div class="stat"><b class="num">6 days</b><span>Median to first contact, program</span></div><div class="stat"><b class="num">'+waitingList.length+'</b><span>Reached, waiting for assessment now</span></div><div class="stat"><b class="num">17%</b><span>Referred but unreached (target under 15%)</span></div>';
+
+/* ---------- treat-to-target scatter ---------- */
+var COL={rem:"var(--good)",resp:"var(--s1)",early:"var(--dot-muted)",off:"var(--serious)"};
+var STL={rem:"In remission (PHQ-9 under 5)",resp:"Responding (50%+ drop)",early:"Under 10 weeks, not yet on target",off:"10+ weeks, not on target"};
+var stc={rem:0,resp:0,early:0,off:0};patients.forEach(function(p){stc[p.st]++;});
+function renderT2T(){
+  var pts=FP(patients);var stc={rem:0,resp:0,early:0,off:0};pts.forEach(function(p){stc[p.st]++;});var revF=pts.filter(function(p){return p.needsReview;}).length;
+  $("t2tLegend").innerHTML=["rem","resp","early","off"].map(function(k){return '<span><i class="sw dot" style="background:'+COL[k]+'"></i>'+STL[k]+' <b class="num">'+stc[k]+'</b></span>';}).join("")+'<span><i class="sw ring"></i>No psychiatric review in 8 weeks</span>';
+  $("pfNote").innerHTML=pfOn()?'Showing <b class="num">'+pts.length+'</b> of '+N+' active patients':'Showing all <b class="num">'+N+'</b> active patients';
+  (function(){
+  var W=720,H=330,m={l:46,r:16,t:14,b:38};
+  var iw=W-m.l-m.r, ih=H-m.t-m.b;
+  function x(v){return m.l+iw*v/36;} function y(v){return m.t+ih*(25-v)/125;}
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Scatter of '+pts.length+' active patients by weeks in care and PHQ-9 change. '+stc.off+' patients are 10 or more weeks in without a 50 percent improvement.">';
+  s+='<rect x="'+x(10)+'" y="'+y(25)+'" width="'+(x(36)-x(10))+'" height="'+(y(-50)-y(25))+'" fill="var(--zone)"/>';
+  [25,0,-25,-50,-75,-100].forEach(function(v){s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+(v===0?'var(--axis)':'var(--grid)')+'" stroke-width="1"/><text x="'+(m.l-8)+'" y="'+(y(v)+4)+'" text-anchor="end" class="num">'+(v>0?'+':'')+v+'%</text>';});
+  [0,4,8,12,16,20,24,28,32,36].forEach(function(v){s+='<text x="'+x(v)+'" y="'+(H-m.b+18)+'" text-anchor="middle" class="num">'+v+'</text>';});
+  s+='<text x="'+(m.l+iw/2)+'" y="'+(H-4)+'" text-anchor="middle">Weeks in care</text>';
+  s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(-50)+'" y2="'+y(-50)+'" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="5 4"/>';
+  s+='<line x1="'+x(10)+'" x2="'+x(10)+'" y1="'+y(25)+'" y2="'+y(-100)+'" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="5 4"/>';
+  s+='<text x="'+(W-m.r-4)+'" y="'+(y(25)+16)+'" text-anchor="end" class="lbl halo">Step up care</text>';
+  s+='<text x="'+(W-m.r-4)+'" y="'+(y(-50)-6)+'" text-anchor="end" class="halo">50% drop = response</text>';
+  s+='<text x="'+(x(10)+6)+'" y="'+(y(-100)-6)+'" class="halo">10 weeks</text>';
+  var order={early:0,resp:1,rem:2,off:3};
+  pts.slice().sort(function(a,b){return order[a.st]-order[b.st];}).forEach(function(p){
+    var jx=p.jx;
+    var cx=x(Math.min(36,p.weeks+jx)).toFixed(1), cy=y(p.change).toFixed(1);
+    var tip='<b>'+p.id+'</b>, '+p.age+p.sex+'<br>'+p.weeks+' wks in care, PHQ-9 '+p.base+' to '+p.cur+' ('+(p.change>0?'+':'')+p.change+'%)<br>'+esc(BHCM[p.bh].short)+(p.needsReview?'<br>No psychiatric review in 8+ weeks':'')+'<br>Select to open';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.st==="off"?4.6:3.8)+'" fill="'+COL[p.st]+'" stroke="var(--surface)" stroke-width="1.2" data-tip="'+tip.replace(/"/g,"&quot;")+'" data-patient="'+p.id+'" style="cursor:pointer"/>';
+    if(p.needsReview) s+='<circle cx="'+cx+'" cy="'+cy+'" r="7.4" fill="none" stroke="var(--ink)" stroke-width="1.6" pointer-events="none"/>';
+  });
+  s+='</svg>';
+  $("t2t").innerHTML=s;
+  $("t2tActions").innerHTML='<span><b class="num">'+stc.off+'</b> patients not on target at 10+ weeks <button class="linkbtn" data-drill="offtarget">By care manager</button></span><span><b class="num">'+revF+'</b> with no psychiatric review in 8 weeks <button class="linkbtn" data-drill="review">See list</button></span>';
+  })();
+}
+renderT2T();
+["age","dual","alone","cog"].forEach(function(k){var el=$("f-"+k);el.addEventListener("change",function(){PF[k]=el.value;renderT2T();});});
+
+/* ---------- queues ---------- */
+var QUEUES=[
+  {n:1,name:"Positive item 9 without same-day risk check",note:"Standard is 100% same day",s:"crit",drill:"safety"},
+  {n:recs.length,name:"Psychiatric recommendations open 14+ days",note:"Owner is the PCP",s:"serious",drill:"recs"},
+  {n:reviewN,name:"Not improving, no psychiatric review",note:"10+ weeks in, under 50% improvement",s:"serious",drill:"review"},
+  {n:overdueN,name:"No care manager contact in 30+ days",note:"Active patients only",s:"warn",drill:"overdue"},
+  {n:29,name:"Referred, unreached after 3 attempts",note:"Last 90 days",s:"warn",drill:"unreached"},
+  {n:46,name:"Positive screens never referred",note:"Last 90 days",s:"warn",drill:"notref"},
+  {n:11,name:"Psychiatric discharges without 7-day follow-up",note:"HEDIS FUH gap",s:"serious",drill:"fuh"}
+];
+$("queues").innerHTML=QUEUES.map(function(q){return '<li class="q"><span class="q-name">'+esc(q.name)+'</span><span class="q-note">'+esc(q.note)+'</span><span class="q-right"><span class="q-count num" style="color:var(--'+(q.s==="crit"?"crit-ink":q.s==="serious"?"serious-ink":"ink")+')">'+q.n+'</span><button class="btn ghost" data-drill="'+q.drill+'" aria-label="Open '+esc(q.name)+'">Open<svg aria-hidden="true"><use href="#i-open"/></svg></button></span></li>';}).join("");
+
+/* ---------- caseload ---------- */
+var cmax=100;
+$("caseload").innerHTML=BHCM.map(function(b,i){
+  var over=b.n>80;
+  return '<button class="hb" data-drill="bhcm" data-arg="'+i+'" data-tip="<b>'+esc(b.name)+'</b><br>'+b.n+' active, '+b.newM+' new in last 4 weeks<br>'+b.off+' not on target, '+b.rem+' in remission"><span class="hb-name">'+esc(b.short)+'</span><span class="hb-track"><span class="hb-band" style="left:60%;width:20%"></span><span class="hb-bar" style="width:'+(100*b.n/cmax)+'%;background:'+(over?'var(--serious)':'var(--s1)')+'"></span></span><span class="hb-v num">'+b.n+'</span></button>';
+}).join("");
+$("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care manager FTE (LCSW)</span></div><div class="stat"><b class="num">9 of 20 hrs</b><span>Psychiatric consultant hours on caseload review, per week</span></div><div class="stat"><b class="num">8 to 12 hrs</b><span>Advancing Integrated Mental Health Solutions (AIMS) Center guide for 4 care managers</span></div>';
+
+/* ---------- flow line chart ---------- */
+(function(){
+  var ref=[11,12,13,12,14,13,15,14,13,15,14,16], dis=[10,9,11,10,10,11,9,10,11,10,9,10];
+  var weeks=[];for(var i=0;i<12;i++){var d=new Date(2026,6,6);d.setDate(d.getDate()+7*i);weeks.push(fmtD(d));}
+  var W=640,H=250,m={l:34,r:84,t:12,b:34},iw=W-m.l-m.r,ih=H-m.t-m.b;
+  function x(i){return m.l+iw*i/11;} function y(v){return m.t+ih*(20-v)/20;}
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Weekly referrals rose from 11 to 16 while discharges held near 10.">';
+  [0,5,10,15,20].forEach(function(v){s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+(v===0?'var(--axis)':'var(--grid)')+'"/><text x="'+(m.l-8)+'" y="'+(y(v)+4)+'" text-anchor="end" class="num">'+v+'</text>';});
+  [0,3,6,9,11].forEach(function(i){s+='<text x="'+x(i)+'" y="'+(H-m.b+18)+'" text-anchor="middle">'+weeks[i]+'</text>';});
+  function path(a){return a.map(function(v,i){return(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1);}).join(' ');}
+  s+='<path d="'+path(ref)+' L'+x(11)+' '+y(dis[11])+' '+dis.slice().reverse().map(function(v,j){return 'L'+x(11-j).toFixed(1)+' '+y(v).toFixed(1);}).join(' ')+' Z" fill="var(--s1)" opacity=".08"/>';
+  s+='<path d="'+path(ref)+'" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>';
+  s+='<path d="'+path(dis)+'" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round"/>';
+  s+='<circle cx="'+x(11)+'" cy="'+y(16)+'" r="4" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/><circle cx="'+x(11)+'" cy="'+y(10)+'" r="4" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"/>';
+  s+='<text x="'+(x(11)+10)+'" y="'+(y(16)+4)+'" class="lbl">Referrals 16</text><text x="'+(x(11)+10)+'" y="'+(y(10)+4)+'" class="lbl">Discharges 10</text>';
+  s+='<line id="xh" x1="0" x2="0" y1="'+m.t+'" y2="'+(H-m.b)+'" stroke="var(--ink-2)" stroke-width="1" opacity="0"/>';
+  for(var i=0;i<12;i++){var bw=iw/11;s+='<rect x="'+(x(i)-bw/2)+'" y="'+m.t+'" width="'+bw+'" height="'+ih+'" fill="transparent" data-xh="'+x(i)+'" data-tip="<b>Week of '+weeks[i]+'</b><br>Referrals '+ref[i]+'<br>Discharges '+dis[i]+'<br>Net '+(ref[i]-dis[i]>0?'+':'')+(ref[i]-dis[i])+'"/>';}
+  s+='</svg>';
+  $("flow").innerHTML=s;
+  var net=ref.reduce(function(a,b){return a+b;},0)-dis.reduce(function(a,b){return a+b;},0);
+  $("flowNote").textContent="Net growth of "+net+" patients over 12 weeks, about "+Math.round(net/12)+" a week. At this pace the program adds a full care manager's caseload (70 patients) about every "+Math.round(70/(net/12)/4.33)+" months.";
+})();
+
+/* ---------- outcome bullets ---------- */
+var BUL=[
+  {n:"Response at 6 months",sub:"50%+ drop in PHQ-9. Enrolled Jan to Mar 2026",v:48,t:50,s:"warn",drill:"response"},
+  {n:"Remission at 6 months",sub:"PHQ-9 under 5. Enrolled Jan to Mar 2026",v:27,t:30,s:"warn",drill:"response"},
+  {n:"Anxiety improvement at 6 months",sub:"GAD-7 down 5+ points. Enrolled Jan to Mar 2026",v:51,t:50,s:"good",drill:"response"},
+  {n:"Same-day suicide risk check",sub:"Positive PHQ-9 item 9 with a C-SSRS that day. Jul to Sep 2026",v:97,t:100,s:"crit",drill:"safety"},
+  {n:"7-day follow-up after psychiatric stay",sub:"HEDIS FUH. Year to date 2026",v:52,t:60,s:"serious",drill:"fuh"},
+  {n:"Patients who would recommend Tandem Care",sub:"Patient survey, n=88. Jul to Sep 2026",v:91,t:90,s:"good",drill:null},
+  {n:"Antidepressant medication management",sub:"HEDIS AMM, secondary. Year to date 2026",v:67,t:70,s:"warn",drill:"amm",sec:true}
+];
+var STARS=[
+  {n:"Depression screening and follow-up",sub:"HEDIS DSF-E. 12 months to Sep 2026",v:DSF,t:80,s:DSF>=80?"good":"warn",drill:"screen"},
+  {n:"Improving or Maintaining Mental Health",sub:"Health Outcomes Survey, plan level. 2026 results",v:79,t:82,s:"warn",drill:null}
+];
+function bulHTML(b){return '<button class="bl'+(b.sec?' sec':'')+'"'+(b.drill?' data-drill="'+b.drill+'"':' style="cursor:default"')+' data-tip="<b>'+esc(b.n)+'</b><br>'+b.v+'% now, target '+b.t+'%"><span class="bl-name">'+esc(b.n)+'<small>'+esc(b.sub)+'</small></span><span class="bl-track"><span class="bl-bar" style="width:'+b.v+'%;background:'+(b.sec?'var(--dot-muted)':b.s==="good"||b.s==="warn"?'var(--s1)':b.s==="crit"?'var(--crit)':'var(--serious)')+'"></span><span class="bl-tgt" style="left:'+b.t+'%"></span></span><span class="bl-v"><b class="num">'+b.v+'%</b>'+chip(b.s)+'</span></button>';}
+$("bullets").innerHTML=BUL.map(bulHTML).join("");
+$("stars").innerHTML=STARS.map(bulHTML).join("");
+
+/* ---------- TCOC small multiples ---------- */
+(function(){
+  var M=[{h:"Cost PMPM",a:1428,b:1546,f:function(v){return "$"+v.toLocaleString();},d:"$118 lower",d2:"7.6% less"},{h:"ED visits per 1,000",a:588,b:671,f:function(v){return v;},d:"83 fewer",d2:"12% less"},{h:"Admits per 1,000",a:231,b:262,f:function(v){return v;},d:"31 fewer",d2:"12% less"}];
+  $("tcoc").innerHTML=M.map(function(m){
+    var mx=m.b*1.1, W=170,H=140,bt=112,top=24;
+    function h(v){return (bt-top)*v/mx;}
+    var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+m.h+': enrolled '+m.f(m.a)+', matched '+m.f(m.b)+'">';
+    s+='<line x1="16" x2="'+(W-16)+'" y1="'+bt+'" y2="'+bt+'" stroke="var(--axis)"/>';
+    [[m.a,"var(--s1)",32,"Enrolled"],[m.b,"var(--dot-muted)",92,"Matched"]].forEach(function(r){var hh=h(r[0]);s+='<path d="M'+r[2]+' '+bt+' V'+(bt-hh+4)+' q0 -4 4 -4 h38 q4 0 4 4 V'+bt+' Z" fill="'+r[1]+'" data-tip="<b>'+r[3]+'</b><br>'+m.h+': '+m.f(r[0])+'"/><text x="'+(r[2]+23)+'" y="'+(bt-hh-6)+'" text-anchor="middle" class="ink num" style="font-weight:700;font-size:13px">'+m.f(r[0])+'</text><text x="'+(r[2]+23)+'" y="'+(bt+16)+'" text-anchor="middle">'+r[3]+'</text>';});
+    s+='</svg>';
+    return '<div class="mm"><h4>'+m.h+'</h4>'+s+'<div class="delta">'+m.d+'<small>'+m.d2+'</small></div></div>';
+  }).join("");
+})();
+
+/* ---------- DRILLS ---------- */
+function bhName(i){return BHCM[i].short;}
+function pcpName(i){return PCPS[i];}
+function pRow(p){return p.id+", "+p.age+p.sex;}
+var DRILLS={
+  recs:function(){
+    var rows=PCPS.map(function(n,i){var ps=recs.filter(function(p){return p.pcp===i;});return{pcp:i,name:n,open:ps.length,oldest:ps.length?Math.max.apply(null,ps.map(function(p){return p.rec.open;})):0,inprog:patients.filter(function(p){return p.pcp===i;}).length};}).filter(function(r){return r.open;}).sort(function(a,b){return b.open-a.open;});
+    return{title:"Psychiatric recommendations open 14+ days",lead:"The psychiatric consultant reviews patients who aren't improving and sends a recommendation to the PCP. These have been open more than 14 days with no order or documented decision.",step:"Bring the list to Thursday's huddle. PCP either orders the change or documents why not, and the care manager tells the patient the plan.",cols:[["name","PCP"],["open","Open 14+ days","r"],["oldest","Oldest (days)","r"],["inprog","Patients in Tandem","r"]],rows:rows,next:function(r){return["recs-pcp",r.pcp];}};
+  },
+  "recs-pcp":function(pi){
+    var rows=recs.filter(function(p){return p.pcp===pi;}).sort(function(a,b){return b.rec.open-a.rec.open;}).map(function(p){return{p:p,id:pRow(p),rec:p.rec.text,made:fmtD(p.rec.made),open:p.rec.open,bh:bhName(p.bh)};});
+    return{title:pcpName(pi)+": open recommendations",crumb:pcpName(pi),lead:rows.length+" recommendations from "+PSYCH+" waiting on "+pcpName(pi)+".",step:"Send each item to the PCP's inbox with the patient's latest PHQ-9. Escalate anything past 30 days to the medical director.",cols:[["id","Patient"],["rec","Recommendation"],["made","Made"],["open","Days open","r"],["bh","Care manager"]],rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  notref:function(){
+    var rows=PCPS.map(function(n,i){return{pcp:i,name:n,pos:POS[i],ref:POS[i]-NOTREF[i],nr:NOTREF[i],rate:pct(POS[i]-NOTREF[i],POS[i])+"%"};}).sort(function(a,b){return b.nr-a.nr;});
+    return{title:"Positive screens not referred, by PCP",lead:"Patients who scored 10 or higher on the PHQ-9 or GAD-7 in the last 90 days and never got a referral to Tandem Care. Program referral rate is 79%.",step:"Share this peer comparison at the provider meeting. For the top three panels, have a care manager join the visit for a warm handoff when a screen comes back positive.",cols:[["name","PCP"],["pos","Positive screens","r"],["ref","Referred","r"],["nr","Not referred","r"],["rate","Referral rate","r"]],rows:rows,next:function(r){return["notref-pcp",r.pcp];}};
+  },
+  "notref-pcp":function(pi){
+    var rows=notRefList.filter(function(p){return p.pcp===pi;}).sort(function(a,b){return a.date-b.date;}).map(function(p){var d=Math.round((ASOF-p.date)/864e5);return{id:p.id+", "+p.age,date:fmtD(p.date),score:p.score,visit:p.visit,days:d,stepx:d>30?"Call patient, offer enrollment":"Add to next huddle"};});
+    return{title:pcpName(pi)+": positive screens not referred",crumb:pcpName(pi),lead:rows.length+" patients screened positive with no referral or documented reason.",step:"Care manager calls each patient to offer enrollment. PCP documents a reason for any patient who shouldn't be referred.",cols:[["id","Patient"],["date","Screened"],["score","Score"],["visit","Visit"],["days","Days since","r"],["stepx","Next step"]],rows:rows};
+  },
+  unreached:function(){
+    var rows=BHCM.map(function(b,i){return{i:i,name:b.name,n:b.unreached};});
+    return{title:"Referred, unreached after 3 attempts",lead:"29 of 168 referrals this quarter (17%) never reached a care manager after three tries. Target is under 15%.",step:"Have the PCP office introduce Tandem at the next visit, and try a letter plus a call at a different time of day.",cols:[["name","Care manager"],["n","Unreached","r"]],rows:rows,next:function(r){return["unreached-bh",r.i];}};
+  },
+  "unreached-bh":function(bi){
+    var rows=unreachedList.filter(function(p){return p.bh===bi;}).map(function(p){return{id:p.id+", "+p.age,pcp:pcpName(p.pcp),ref:fmtD(p.ref),att:p.attempts,last:fmtD(p.lastTry),stepx:"PCP warm handoff at next visit"};});
+    return{title:BHCM[bi].short+": unreached referrals",crumb:BHCM[bi].short,lead:rows.length+" referred patients this care manager couldn't reach.",cols:[["id","Patient"],["pcp","PCP"],["ref","Referred"],["att","Attempts","r"],["last","Last attempt"],["stepx","Next step"]],rows:rows};
+  },
+  wait:function(arg){
+    if(arg!==undefined&&arg!==null) return DRILLS["wait-bh"](arg);
+    var rows=BHCM.map(function(b,i){return{i:i,name:b.name,first:b.first,assess:b.assess,waiting:b.waiting,stat:b.assess>14?"Off target":"On target"};});
+    return{title:"Access: time to first contact and assessment",lead:"Median days from referral. Program median is 6 days to first contact (target 7) and 16 days to initial assessment (target 14). The delay is almost all on one caseload.",step:"Move new referrals from K. Moreno to T. Brooks and A. Ng for 30 days, and hold two intake slots a day open across the team.",cols:[["name","Care manager"],["first","To first contact","r"],["assess","To assessment","r"],["waiting","Waiting now","r"],["stat","Status"]],rows:rows,next:function(r){return["wait-bh",r.i];}};
+  },
+  "wait-bh":function(bi){
+    var rows=waitingList.filter(function(p){return p.bh===bi;}).sort(function(a,b){return b.days-a.days;}).map(function(p){return{id:p.id+", "+p.age,pcp:pcpName(p.pcp),ref:fmtD(p.ref),days:p.days,booked:p.booked};});
+    return{title:BHCM[bi].short+": waiting for initial assessment",crumb:BHCM[bi].short,lead:rows.length+" patients reached and waiting. Median wait to assessment on this caseload is "+BHCM[bi].assess+" days.",step:"Book anyone over 14 days this week. Offer a video visit if the next in-person slot is more than 5 days out.",cols:[["id","Patient"],["pcp","PCP"],["ref","Referred"],["days","Days waiting","r"],["booked","Assessment"]],rows:rows};
+  },
+  mbc:function(){
+    var rows=BHCM.map(function(b,i){var c=Math.round(b.n*2.6);return{i:i,name:b.name,contacts:c,scored:Math.round(c*b.mbc/100),rate:b.mbc+"%"};});
+    return{title:"Contacts with a PHQ-9 or GAD-7 recorded",lead:"Measurement-based care means scoring symptoms at nearly every contact so the team can tell whether treatment is working. Program rate is 76% against a target of 80%.",step:"Add the PHQ-9 to the care manager's phone-visit template so it opens by default.",cols:[["name","Care manager"],["contacts","Contacts this quarter","r"],["scored","With a score","r"],["rate","Rate","r"]],rows:rows,next:function(r){return["mbc-bh",r.i];}};
+  },
+  "mbc-bh":function(bi){
+    var ps=BHCM[bi].ps.filter(function(p){return p.weeks>=6;}).slice(0,Math.round(BHCM[bi].n*(100-BHCM[bi].mbc)/250));
+    var rows=ps.map(function(p){var g=ri(32,70);return{p:p,id:pRow(p),last:g+" days ago",weeks:p.weeks,stepx:"Score PHQ-9 at next contact"};});
+    return{title:BHCM[bi].short+": no symptom score in 30+ days",crumb:BHCM[bi].short,lead:rows.length+" active patients whose last PHQ-9 or GAD-7 is more than 30 days old.",cols:[["id","Patient"],["last","Last score"],["weeks","Weeks in care","r"],["stepx","Next step"]],rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  overdue:function(){
+    var rows=BHCM.map(function(b,i){var ps=FP(b.ps);var o=ps.filter(function(p){return p.last>30;}).length;return{i:i,name:b.name,o:o,n:ps.length,rate:pct(o,ps.length)+"%"};});
+    return{title:"No care manager contact in 30+ days",lead:overdueN+" active patients haven't heard from their care manager in more than a month. Target is 10% or less of the caseload. Patients scoring 10 or higher should get a check-in every 2 weeks."+fl(),step:"Care manager calls this week. Two missed calls trigger a letter and a flag to the PCP.",cols:[["name","Care manager"],["o","Overdue","r"],["n","Caseload","r"],["rate","Share","r"]],rows:rows,next:function(r){return["overdue-bh",r.i];}};
+  },
+  "overdue-bh":function(bi){
+    var rows=FP(BHCM[bi].ps).filter(function(p){return p.last>30;}).sort(function(a,b){return b.last-a.last;}).map(function(p){return{p:p,id:pRow(p),pcp:pcpName(p.pcp),last:p.last,weeks:p.weeks,phq:p.cur};});
+    return{title:BHCM[bi].short+": overdue contacts",crumb:BHCM[bi].short,lead:rows.length+" patients with no contact in 30+ days.",cols:[["id","Patient"],["pcp","PCP"],["last","Days since contact","r"],["weeks","Weeks in care","r"],["phq","Latest PHQ-9","r"]],rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  offtarget:function(){
+    var rows=BHCM.map(function(b,i){var ps=FP(b.ps),off=ps.filter(function(p){return p.st==="off";}).length,rev=ps.filter(function(p){return p.needsReview;}).length;return{i:i,name:b.name,off:off,rev:rev,n:ps.length,share:pct(off,ps.length)+"%"};});
+    return{title:"Not on target at 10+ weeks, by care manager",lead:FP(patients).filter(function(p){return p.st==="off";}).length+" patients have been in care 10 weeks or more without a 50% drop in PHQ-9. Treat-to-target says change the treatment plan and bring them to psychiatric case review."+fl(),step:"Each care manager brings these patients to the weekly case review, starting with anyone never reviewed.",cols:[["name","Care manager"],["off","Not on target","r"],["rev","No review in 8 wks","r"],["n","Caseload","r"],["share","Share","r"]],rows:rows,next:function(r){return["offtarget-bh",r.i];}};
+  },
+  "offtarget-bh":function(bi){
+    var rows=FP(BHCM[bi].ps).filter(function(p){return p.st==="off";}).sort(function(a,b){return b.change-a.change;}).map(listRow);
+    return{title:BHCM[bi].short+": not on target",crumb:BHCM[bi].short,lead:rows.length+" patients, sorted with the least improvement first.",cols:LISTCOLS,rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  review:function(){
+    var rows=FP(patients).filter(function(p){return p.needsReview;}).sort(function(a,b){return(b.review===null?99:b.review)-(a.review===null?99:a.review);}).map(listRow);
+    return{title:"Needs psychiatric case review",lead:rows.length+" patients are 10+ weeks in care, under 50% improvement, with no psychiatric review in the last 8 weeks. Dr. Farouk spends about 9 of 20 weekly hours on caseload review. The Advancing Integrated Mental Health Solutions (AIMS) Center guide for four care managers is 8 to 12 hours."+fl(),step:"Protect a weekly review hour for each care manager, and schedule the never-reviewed patients first.",cols:LISTCOLS,rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  caseload:function(){
+    var rows=BHCM.map(function(b,i){return{i:i,name:b.name,n:b.n,nw:b.newM,off:b.off,rem:b.rem,band:b.n>80?"Above band":b.n<60?"Below band":"In band"};});
+    return{title:"Caseload by care manager",lead:"Target is 60 to 80 active patients per full-time care manager. Above 80, contact frequency and wait times slip first.",step:"Route the next 10 referrals to T. Brooks. Graduate patients in remission 3+ months to a relapse prevention plan to open slots.",cols:[["name","Care manager"],["n","Active","r"],["nw","New, 4 wks","r"],["off","Not on target","r"],["rem","In remission","r"],["band","Band"]],rows:rows,next:function(r){return["bhcm",r.i];}};
+  },
+  bhcm:function(bi){
+    var b=BHCM[bi];
+    var rows=FP(b.ps).sort(function(a,c){return prio(c)-prio(a);}).slice(0,25).map(listRow);
+    return{title:b.name,crumb:b.short,lead:b.n+" active patients. "+b.off+" not on target, "+b.ps.filter(function(p){return p.last>30;}).length+" overdue for contact, "+b.rem+" in remission. Top 25 by priority shown."+fl(),kv:[["Active",b.n],["Median days to assessment",b.assess],["Contacts with a score",b.mbc+"%"],["6-month response",b.resp+"%"]],cols:LISTCOLS,rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  response:function(){
+    var rows=BHCM.map(function(b,i){var n=[28,25,23,20][i];return{i:i,name:b.name,n:n,fu:pct(Math.round(n*[.71,.8,.83,.85][i]),n)+"%",resp:b.resp+"%",rem:[21,26,30,33][i]+"%"};});
+    return{title:"6-month outcomes by care manager",lead:"Patients enrolled January through March 2026 (n=96). Response is a 50%+ drop in PHQ-9. Remission is a PHQ-9 under 5. Program response is 48% against a 50% target.",step:"The gap tracks caseload size. K. Moreno has the largest caseload and the lowest response. Rebalancing should come before coaching.",cols:[["name","Care manager"],["n","Cohort","r"],["fu","6-mo score on file","r"],["resp","Response","r"],["rem","Remission","r"]],rows:rows,next:function(r){return["offtarget-bh",r.i];}};
+  },
+  safety:function(){return DRILLS.patient(safetyP.id);},
+  screen:function(){
+    var rows=PCPS.map(function(n,i){return{name:n,attr:ATTR[i],scr:scrN[i],rate:Math.round(100*SCR[i])+"%",gap:ATTR[i]-scrN[i]};}).sort(function(a,b){return parseInt(a.rate)-parseInt(b.rate);});
+    return{title:"Depression screening by PCP",lead:"Depression Screening and Follow-Up (DSF-E) rate 1: attributed seniors screened with a standard tool in the 12 months ending Sep 30, 2026. Program rate is "+DSF1+"%. Rate 2, positive screens with follow-up within 30 days, is "+DSF2+"%. This becomes a Medicare Star Ratings measure in measurement year 2027.",step:"Add the PHQ-2 to the annual wellness visit and chronic care visit templates for the two lowest panels, and have medical assistants run a weekly list of patients due.",cols:[["name","PCP"],["attr","Attributed","r"],["scr","Screened","r"],["gap","Not screened","r"],["rate","Rate","r"]],rows:rows};
+  },
+  rules:function(){
+    var rows=[
+      {tier:"1. Safety",rule:"Positive PHQ-9 item 9 with no C-SSRS documented the same day",flag:"Act now",owner:"Clinical lead and the patient's care manager",due:"Today",src:"athenaOne"},
+      {tier:"2. Treatment delay",rule:"Psychiatric recommendation with no PCP order or documented decision after 14 days",flag:"Off target",owner:"Medical director",due:"Next huddle",src:"Registry, athenaOne orders"},
+      {tier:"2. Treatment delay",rule:"Psychiatric discharge with no follow-up visit booked within 7 days",flag:"Off target",owner:"Patient's care manager",due:"48 hours",src:"Admission and discharge feed"},
+      {tier:"2. Treatment delay",rule:"Patients 10+ weeks in, under 50% improvement, no psychiatric review in 8 weeks, and caseload review time under 2 hours per care manager",flag:"Watch",owner:"Program delivery lead",due:"Next staffing review",src:"Registry"},
+      {tier:"3. Access",rule:"Care manager caseload above 80, or median days to assessment over 14",flag:"Off target",owner:"Program delivery lead",due:"This week",src:"Registry, scheduling"},
+      {tier:"3. Access",rule:"More than 10% of a caseload with no contact in 30+ days",flag:"Watch",owner:"Care manager",due:"This week",src:"Registry"},
+      {tier:"4. Reach",rule:"PCP panel referral rate under 85% with 5+ positive screens not referred",flag:"Watch",owner:"Medical director",due:"Next provider meeting",src:"athenaOne"},
+      {tier:"4. Reach",rule:"More than 15% of referrals unreached after 3 attempts",flag:"Watch",owner:"Program delivery lead",due:"Monthly review",src:"Registry"},
+      {tier:"4. Reach",rule:"Depression screening rate under 80% on a PCP panel, or positive screens without follow-up in 30 days",flag:"Watch",owner:"Medical director",due:"Monthly review",src:"athenaOne"}
+    ];
+    var html='<div><h3 style="margin:0 0 6px;font-size:15px">How items are ranked</h3><p class="d-lead" style="margin:0">By tier first, so safety always comes first. Within a tier, by number of patients affected, then by days overdue. The top five show on the dashboard and the rest stay in the full list.</p></div>'+
+    '<div><h3 style="margin:0 0 6px;font-size:15px">How the wording is built</h3><p class="d-lead" style="margin:0">Each rule has a sentence template with the numbers filled in from the data, plus the provider or care manager who accounts for the largest share. For example: "Close {count} psychiatric recommendations open more than 14 days. {top count} sit with {top PCP}." Suggested fixes come from the data too, such as routing referrals to the care manager with the lowest caseload.</p></div>'+
+    '<div><h3 style="margin:0 0 6px;font-size:15px">Refresh schedule</h3><p class="d-lead" style="margin:0">Nightly from athenaOne and the Collaborative Care registry. Admission and discharge notices daily. Cost and HEDIS monthly, since claims lag about 30 days.</p></div>';
+    return{title:"How weekly priorities are generated",crumb:"Automation rules",lead:"In a live version this list builds itself. Each rule below checks the data every night. When one trips, it creates a priority with an owner and a due date, and the item drops off once the rule clears.",cols:[["tier","Tier"],["rule","Rule"],["owner","Owner"],["due","Due"]],rows:rows,html:html};
+  },
+  fuh:function(){
+    var rows=genPeople(11,function(){var d=ri(8,60);return{id:newId()+", "+ri(67,90),pcp:pcpName(ri(0,7)),dis:fmtD(daysAgo(d)),src:pick(["Inpatient psychiatric unit","Inpatient psychiatric unit","ED, mental health diagnosis"]),fu:d<14?"Still open":"Missed 7 days",stepx:d<14?"Book visit within 48 hours":"Outreach and schedule"};});
+    return{title:"Mental health discharges without 7-day follow-up",lead:"HEDIS FUH counts a follow-up visit with a mental health provider within 7 days of a psychiatric discharge. These 11 discharges in the measurement year don't have one yet.",step:"Get a daily discharge feed from the health plan and admitting hospitals, and have the care manager book the visit before the patient leaves.",cols:[["id","Patient"],["pcp","PCP"],["dis","Discharged"],["src","Setting"],["fu","Status"],["stepx","Next step"]],rows:rows};
+  },
+  amm:function(){
+    var drugs=["Sertraline","Escitalopram","Mirtazapine","Bupropion XL","Duloxetine"];
+    var rows=genPeople(9,function(){var s=ri(90,200);return{id:newId()+", "+ri(66,89),pcp:pcpName(ri(0,7)),drug:pick(drugs),start:fmtD(daysAgo(s)),fill:fmtD(daysAgo(ri(40,Math.max(45,s-30)))),stepx:pick(["Ask about side effects, offer a switch","Call about refill and cost","Pharmacist outreach on adherence"])};});
+    return{title:"Antidepressant continuation gaps",lead:"HEDIS AMM tracks whether patients who start an antidepressant stay on it 12 weeks and 6 months. These patients have a fill gap of more than 30 days.",step:"Care manager asks why they stopped. Side effects and cost are the usual reasons, and both have fixes.",cols:[["id","Patient"],["pcp","PCP"],["drug","Medication"],["start","Started"],["fill","Last fill"],["stepx","Next step"]],rows:rows};
+  },
+  tcoc:function(){
+    var ps=shuffle(patients.slice()).slice(0,8);
+    var rows=ps.map(function(p,i){p.last=Math.max(p.last,ri(31,50));var pm=ri(3200,9800);return{p:p,id:pRow(p),pmpm:"$"+pm.toLocaleString(),ed:ri(1,5),ip:ri(0,2),last:p.last+" days",bh:bhName(p.bh)};}).sort(function(a,b){return b.ed-a.ed;});
+    return{title:"High-cost enrolled patients with no recent contact",lead:"Cost per member per month (PMPM) runs 7.6% lower for enrolled patients than the matched group over the 12 months ending Sep 30, 2026, with a likely range of 1.2% to 13.8% lower. These enrolled patients are in the top 10% for cost over the last 6 months and haven't had a care manager contact in 30 days.",step:"Review at the weekly care team huddle with the RN care coach. Most have an ED pattern a care plan can address.",cols:[["id","Patient"],["pmpm","PMPM, 6 mo","r"],["ed","ED visits","r"],["ip","Admits","r"],["last","Last contact","r"],["bh","Care manager"]],rows:rows,next:function(r){return["patient",r.p.id];}};
+  },
+  patient:function(id){
+    var p=patients.filter(function(x){return x.id===id;})[0];
+    if(!p) return{title:"Patient not found",lead:"This record isn't in the active caseload.",rows:[]};
+    var stTxt={rem:"In remission",resp:"Responding",early:"Early in care",off:"Not on target"}[p.st];
+    var steps=[];
+    if(p.safety) steps.push("Complete a Columbia (C-SSRS) screen and safety plan today. Document follow-up with "+bhName(p.bh)+".");
+    if(p.rec) steps.push("PCP to act on the psychiatric recommendation: "+p.rec.text+".");
+    if(p.needsReview) steps.push("Bring to this week's psychiatric case review.");
+    if(p.last>30) steps.push("Care manager call this week. No contact in "+p.last+" days.");
+    if(!steps.length) steps.push(p.st==="rem"?"Keep monthly contact and start the relapse prevention plan.":"Continue the current plan. Score PHQ-9 at the next contact.");
+    var traj=[];var nPts=Math.min(8,Math.max(2,Math.round(p.weeks/3)+1));for(var i=0;i<nPts;i++){var t=i/(nPts-1);traj.push(Math.round(p.base+(p.cur-p.base)*Math.pow(t,0.8)+(i&&i<nPts-1?ri(-2,2):0)));}
+    return{title:p.id+", "+p.age+p.sex,crumb:p.id,lead:p.dx+". "+p.weeks+" weeks in care with "+bhName(p.bh)+". PCP is "+pcpName(p.pcp)+".",
+      kv:[["Status",stTxt],["PHQ-9 baseline",p.base],["PHQ-9 latest",p.cur],["Change",(p.change>0?"+":"")+p.change+"%"],["Last contact",p.last+" days ago"],["Last psych review",p.review===null?"Never":p.review+" wks ago"]],
+      traj:traj,steps:steps,safety:p.safety,rows:[]};
+  }
+};
+var LISTCOLS=[["id","Patient"],["weeks","Weeks","r"],["phq","PHQ-9","r"],["chg","Change","r"],["rev","Last review"],["last","Last contact","r"]];
+function prio(p){return(p.safety?100:0)+(p.rec?40:0)+(p.needsReview?30:0)+(p.last>30?20:0)+(p.st==="off"?10:0)+p.cur/10;}
+function listRow(p){return{p:p,id:pRow(p),weeks:p.weeks,phq:p.base+" to "+p.cur,chg:(p.change>0?"+":"")+p.change+"%",rev:p.review===null?"Never":p.review+" wks ago",last:p.last+"d"};}
+
+/* ---------- drawer ---------- */
+var stack=[],lastFocus=null;
+var ROOTCRUMB={recs:"Psychiatric recommendations",notref:"Not referred",unreached:"Unreached",wait:"Access",mbc:"Measurement-based care",overdue:"Overdue contact",offtarget:"Not on target",review:"Case review",caseload:"Caseloads",response:"6-month outcomes",safety:"Safety",rules:"Automation rules",fuh:"FUH gaps",amm:"AMM gaps",tcoc:"High-cost patients",patient:"Patient",bhcm:"Caseloads"};
+function openDrill(key,arg,push){
+  var v=DRILLS[key](arg);
+  if(!push)stack=[];
+  stack.push({key:key,arg:arg,label:v.crumb||ROOTCRUMB[key]||v.title});
+  renderDrawer(v);
+}
+function renderDrawer(v){
+  var d=$("drawer"),sc=$("scrim");
+  $("d-title").textContent=v.title;
+  $("crumbs").innerHTML='<span>Dashboard</span>'+stack.map(function(s,i){return '<span class="sep">/</span>'+(i<stack.length-1?'<button data-crumb="'+i+'">'+esc(s.label)+'</button>':'<span>'+esc(s.label)+'</span>');}).join("");
+  var h='';
+  if(v.lead)h+='<p class="d-lead">'+esc(v.lead)+'</p>';
+  if(v.safety)h+='<div class="d-step" style="background:var(--crit-wash)"><b style="color:var(--crit-ink)">Safety alert</b>PHQ-9 item 9 answered "'+esc(v.safety.item9)+'" on '+fmtD(v.safety.date)+'. No same-day suicide risk assessment documented.</div>';
+  if(v.kv)h+='<div class="kv">'+v.kv.map(function(k){return '<div><span>'+esc(k[0])+'</span><b class="num">'+esc(k[1])+'</b></div>';}).join("")+'</div>';
+  if(v.traj)h+=trajSvg(v.traj);
+  if(v.steps)h+='<div class="d-step"><b>Next steps</b>'+v.steps.map(esc).join("<br>")+'</div>';
+  else if(v.step)h+='<div class="d-step"><b>Suggested action</b>'+esc(v.step)+'</div>';
+  if(v.rows&&v.rows.length){
+    h+='<div class="tbl-wrap"><table><thead><tr>'+v.cols.map(function(c){return '<th class="'+(c[2]||'')+'">'+esc(c[1])+'</th>';}).join("")+'</tr></thead><tbody>'+v.rows.map(function(r,ri2){return '<tr'+(v.next?' class="click" tabindex="0" data-row="'+ri2+'"':'')+'>'+v.cols.map(function(c){return '<td class="'+(c[2]||'')+'">'+esc(r[c[0]])+'</td>';}).join("")+'</tr>';}).join("")+'</tbody></table></div>';
+    if(v.next)h+='<p class="note" style="margin:0">Select a row to go one level deeper.</p>';
+  }
+  if(v.html)h+=v.html;
+  $("dBody").innerHTML=h;
+  $("dBody").scrollTop=0;
+  currentView=v;
+  if(d.hidden){lastFocus=document.activeElement;d.hidden=false;sc.hidden=false;requestAnimationFrame(function(){d.classList.add("on");sc.classList.add("on");});}
+  setTimeout(function(){$("d-title").focus({preventScroll:true});},30);
+}
+var currentView=null;
+function trajSvg(t){
+  var W=520,H=120,m={l:30,r:12,t:10,b:22},iw=W-m.l-m.r,ih=H-m.t-m.b,mx=27;
+  function x(i){return m.l+iw*i/(t.length-1);} function y(v){return m.t+ih*(mx-v)/mx;}
+  var s='<div><h3 style="margin:0 0 4px;font-size:14px">PHQ-9 over time</h3><svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="PHQ-9 from '+t[0]+' to '+t[t.length-1]+'">';
+  s+='<rect x="'+m.l+'" y="'+y(5)+'" width="'+iw+'" height="'+(y(0)-y(5))+'" fill="var(--good-wash)"/>';
+  [0,5,10,15,20,25].forEach(function(v){s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--grid)"/><text x="'+(m.l-6)+'" y="'+(y(v)+4)+'" text-anchor="end" class="num">'+v+'</text>';});
+  s+='<text x="'+(m.l+6)+'" y="'+(y(0)-4)+'" style="fill:var(--good-ink)">Remission zone</text>';
+  s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(t[0]/2)+'" y2="'+y(t[0]/2)+'" stroke="var(--ink-2)" stroke-dasharray="4 4"/><text x="'+(m.l+6)+'" y="'+(y(t[0]/2)-5)+'" class="halo">50% of baseline</text>';
+  s+='<path d="'+t.map(function(v,i){return(i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1);}).join(" ")+'" fill="none" stroke="var(--s1)" stroke-width="2"/>';
+  t.forEach(function(v,i){s+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="'+(i===t.length-1?4.5:3)+'" fill="var(--s1)" stroke="var(--surface)" stroke-width="1.5"/>';});
+  s+='<text x="'+x(t.length-1)+'" y="'+(y(t[t.length-1])-9)+'" text-anchor="end" class="ink" style="font-weight:700">'+t[t.length-1]+'</text>';
+  return s+'</svg></div>';
+}
+function closeDrawer(){
+  var d=$("drawer"),sc=$("scrim");
+  d.classList.remove("on");sc.classList.remove("on");
+  setTimeout(function(){d.hidden=true;sc.hidden=true;},230);
+  stack=[];
+  if(lastFocus&&lastFocus.focus)lastFocus.focus();
+}
+document.addEventListener("click",function(e){
+  var t=e.target.closest("[data-drill]");
+  if(t){var a=t.getAttribute("data-arg");openDrill(t.getAttribute("data-drill"),a===null?undefined:+a,false);hideTip();return;}
+  var pt=e.target.closest("[data-patient]");
+  if(pt){openDrill("patient",pt.getAttribute("data-patient"),false);hideTip();return;}
+  var row=e.target.closest("tr.click");
+  if(row&&currentView&&currentView.next){var nx=currentView.next(currentView.rows[+row.getAttribute("data-row")]);openDrill(nx[0],nx[1],true);return;}
+  var cr=e.target.closest("[data-crumb]");
+  if(cr){var i=+cr.getAttribute("data-crumb");var s=stack[i];stack=stack.slice(0,i);openDrill(s.key,s.arg,true);return;}
+});
+$("dClose").addEventListener("click",closeDrawer);
+$("scrim").addEventListener("click",closeDrawer);
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"&&!$("drawer").hidden){closeDrawer();}
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("tr.click")){e.preventDefault();e.target.click();}
+  if(e.key==="Tab"&&!$("drawer").hidden){var f=$("drawer").querySelectorAll('button,[tabindex="0"],h2[tabindex]');if(!f.length)return;var first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+});
+
+/* ---------- tooltip ---------- */
+var tip=$("tip");
+function showTip(html,x,y){tip.innerHTML=html;tip.hidden=false;var w=tip.offsetWidth,h=tip.offsetHeight;var px=x+14,py=y+14;if(px+w>window.innerWidth-8)px=x-w-14;if(py+h>window.innerHeight-8)py=y-h-14;tip.style.left=Math.max(8,px)+"px";tip.style.top=Math.max(8,py)+"px";}
+function hideTip(){tip.hidden=true;var xh=document.getElementById("xh");if(xh)xh.setAttribute("opacity","0");}
+document.addEventListener("pointermove",function(e){var t=e.target.closest&&e.target.closest("[data-tip]");if(!t){if(!tip.hidden)hideTip();return;}showTip(t.getAttribute("data-tip"),e.clientX,e.clientY);var xv=t.getAttribute("data-xh");var xh=document.getElementById("xh");if(xh){if(xv){xh.setAttribute("x1",xv);xh.setAttribute("x2",xv);xh.setAttribute("opacity",".5");}else xh.setAttribute("opacity","0");}});
+document.addEventListener("focusin",function(e){var t=e.target.closest&&e.target.closest("[data-tip]");if(t){var r=t.getBoundingClientRect();showTip(t.getAttribute("data-tip"),r.left,r.bottom);}else hideTip();});
+window.addEventListener("scroll",hideTip,{passive:true});
+
+/* ---------- definitions ---------- */
+var DEFS=[
+ ["Program reach (penetration)", "Performance", "Active Tandem patients divided by attributed patients who scored 10 or higher on the Patient Health Questionnaire-9 (PHQ-9) or Generalized Anxiety Disorder-7 (GAD-7) in the last 12 months.", "Stretch target 50%. 35% to 40% is solid for year one.", "Shows how much of the need the program actually reaches. Low reach with good outcomes means the model works but isn't scaled.", "Registry, athenaOne screening", "Positive screens not referred, by primary care provider"],
+ ["Referral to first contact", "Performance", "Median calendar days from the referral order to the first completed care manager contact.", "7 days or less", "Engagement drops quickly when the first call is slow.", "Registry, scheduling", "Care manager, then waiting patients"],
+ ["Referral to initial assessment", "Performance", "Median days from referral to the completed initial assessment that starts the care plan.", "14 days or less, tightening to 10", "Treatment can't start until assessment. This is where capacity problems show up first.", "Registry, scheduling", "Care manager, then waiting patients"],
+ ["Cost per member per month (PMPM) vs. matched group", "Performance", "Total cost of care per member per month for patients enrolled 6+ months, compared with similar patients who screened positive and didn't enroll (propensity-matched). Rolling 12 months, reported quarterly with a likely range.", "5% lower or better", "CenterWell takes financial risk on these patients. Untreated depression raises medical cost, so this is the program's business case.", "Health plan claims", "High-cost enrolled patients with no recent contact"],
+ ["Emergency department (ED) visits and admissions per 1,000", "Performance", "Emergency department visits and inpatient admissions per 1,000 enrolled patients per year, compared with the same matched group used for cost.", "Lower than matched", "Utilization explains why cost moved and is easier for clinicians to act on than dollars.", "Health plan claims, admission, discharge, and transfer (ADT) feed", "High-cost enrolled patients"],
+ ["Referral funnel", "Referral and follow-up", "Patients at each step in the quarter: positive screen, referred, reached, enrolled, first follow-up within 30 days, and follow-up with a scored Patient Health Questionnaire-9 (PHQ-9) or Generalized Anxiety Disorder-7 (GAD-7).", "80% of enrolled patients get a follow-up contact. Other steps set from baseline.", "Shows which handoff is losing patients and who owns that handoff.", "athenaOne, registry", "Each gap opens its patient list"],
+ ["Positive screens not referred", "Referral and follow-up", "Patients who scored 10 or higher on the Patient Health Questionnaire-9 (PHQ-9) or Generalized Anxiety Disorder-7 (GAD-7) in the last 90 days with no Tandem referral and no documented reason.", "Referral rate 85% or more", "The biggest leak is usually at the primary care provider (PCP). Peer comparison by PCP is the fastest fix.", "athenaOne", "PCP, then patients"],
+ ["Unreached after 3 attempts", "Referral and follow-up", "Referred patients the care manager couldn't reach after three outreach attempts, divided by all referrals.", "Under 15%", "High rates point to a weak introduction at the visit. Warm handoffs fix most of it.", "Registry", "Care manager, then patients"],
+ ["Contacts with a symptom score", "Referral and follow-up", "Care manager contacts with a symptom score recorded, divided by all care manager contacts.", "80% or more", "Measurement-based care is the core of the model.", "Registry", "Care manager"],
+ ["Overdue contact", "Bottlenecks", "Active patients with no care manager contact in more than 30 days.", "10% or less of caseload", "Missed contacts are the first sign a caseload is too big.", "Registry", "Care manager, then patients"],
+ ["Not on target at 10+ weeks", "Bottlenecks", "Active patients 10 or more weeks in care whose Patient Health Questionnaire-9 (PHQ-9) score hasn't dropped 50% from their starting score.", "Tracked, no fixed target", "These patients need a change in treatment instead of more of the same.", "Registry", "Care manager, then patients, then patient record"],
+ ["Needs psychiatric case review", "Bottlenecks", "Patients not on target at 10+ weeks with no review by the psychiatric consultant in the last 8 weeks.", "80% or more of non-improving patients reviewed within 2 months", "Regular caseload review by a psychiatric consultant is what separates the Collaborative Care Model (CoCM) from placing a therapist in the clinic.", "Registry", "Patient list, then patient record"],
+ ["Psychiatric recommendations open 14+ days", "Bottlenecks", "Recommendations from the psychiatric consultant with no primary care provider (PCP) order or documented decision after 14 days.", "90% or more acted on or declined within 14 days", "A recommendation nobody acts on is wasted psychiatry time. The drill-down shows the PCP and the exact recommendation.", "Registry, athenaOne orders", "PCP, then patient and recommendation"],
+ ["Caseload per care manager", "Capacity", "Active patients per full-time care manager.", "60 to 80", "Above the band, contact frequency and outcomes fall. Below it, the program is overstaffed for current demand.", "Registry, human resources (HR)", "Care manager, then patients by priority"],
+ ["Referrals vs. discharges", "Capacity", "New referrals and discharges (graduated, transferred, or disenrolled) per week, plus average weeks in treatment.", "Roughly balanced, with an average stay of 16 to 24 weeks", "If referrals run above discharges, the caseload grows until access breaks. Drives hiring timing.", "Registry", "Trend only"],
+ ["Psychiatric caseload review time", "Capacity", "Hours per week the psychiatric consultant spends reviewing caseloads with care managers, compared with hours allocated.", "2 to 3 hours per care manager per week", "Protected review time, more than headcount, is usually the limit. Four care managers need about 8 to 12 hours a week.", "Consultant schedule, registry", "Case review list"],
+ ["CoCM time minimum met", "Capacity", "Patient-months where care manager time met the billing minimum.", "80% or more", "A check on model intensity.", "Registry time log", "Care manager"],
+ ["Response and remission at 6 months", "Outcomes", "For patients enrolled in a cohort, the share whose Patient Health Questionnaire-9 (PHQ-9) score dropped 50% or more (response) or fell below 5 (remission) at 6 months, plus or minus 30 days.", "Response 50% or more, remission 30% or more", "The clinical result the model is built to produce. Matches the Healthcare Effectiveness Data and Information Set (HEDIS) Depression Remission or Response (DRR-E) measure.", "Registry", "Care manager, then patients not on target"],
+ ["Same-day suicide risk assessment", "Outcomes", "Positive answers to Patient Health Questionnaire-9 (PHQ-9) item 9, which asks about thoughts of self-harm, with a Columbia Suicide Severity Rating Scale (C-SSRS) assessment documented the same day.", "100%", "Patient safety. Any miss is reviewed the same day.", "athenaOne", "Patient record"],
+ ["Healthcare Effectiveness Data and Information Set (HEDIS) measures: FUH and AMM", "Outcomes", "Year-to-date rates for patients attributed to these PCPs. Follow-Up After Hospitalization for Mental Illness (FUH): a mental health visit within 7 days of a psychiatric discharge. Antidepressant Medication Management (AMM): patients who stay on a new antidepressant. AMM is secondary because the National Committee for Quality Assurance (NCQA) is retiring it from health plan ratings.", "Health plan targets", "FUH now counts Collaborative Care visits as follow-up, so Tandem can close these gaps directly.", "Health plan quality data", "Open gaps by patient"],
+ ["Patient experience", "Outcomes", "Patients who would recommend Tandem Care on the program survey, shown with the response count.", "90% or more", "Patients who value the program stay engaged, and engagement drives outcomes.", "Surveys", "None"],
+ ["Social isolation and cognitive screens", "Outcomes", "Share of caseload screening positive for loneliness or on a brief cognitive screen.", "Context only", "Context for care planning.", "athenaOne", "None"],
+ ["Priority actions", "Actions", "Ranked list built from metrics past their standard: safety first, then items that delay treatment, then items that limit reach.", "Reviewed weekly", "Turns the dashboard into a meeting agenda with an owner and a date for each item.", "All of the above", "Each item's patient list"],
+ ["Depression Screening and Follow-Up (DSF-E)", "Referral and follow-up", "Two Healthcare Effectiveness Data and Information Set (HEDIS) rates. Rate 1: attributed patients screened for depression with a standard tool during the year. Rate 2: positive screens with follow-up care within 30 days. The Centers for Medicare and Medicaid Services (CMS) averages the two for Star Ratings.", "80% or more on each rate", "Becomes a Medicare Star Ratings measure in measurement year 2027, counting toward the 2029 ratings. It is also the top of the Tandem funnel.", "athenaOne, health plan quality data", "Unscreened patients by PCP"],
+ ["Improving or Maintaining Mental Health", "Outcomes", "Share of Medicare Advantage members in the Health Outcomes Survey (HOS) whose mental health stayed the same or improved over two years. Measured for the whole health plan.", "Health plan target", "Triple-weighted in the 2027 Star Ratings, which makes it the Star measure most tied to behavioral health. Tandem outcomes feed it, but results lag about two years.", "Health plan survey results", "None"]
+];
+var BASIS=[
+ ["bench", "Benchmark-informed", "A 2026 review of real-world Collaborative Care programs found reach of 8% to 56%."],
+ ["local", "Starting point, needs review", "No Collaborative Care standard. First outreach attempt within 2 business days."],
+ ["local", "Starting point, needs review", "No Collaborative Care standard. Some state Medicaid programs require assessment within 7 days of referral."],
+ ["bench", "Benchmark-informed", "IMPACT trial in older adults: about 10% lower total cost over 4 years. A 2023 real-world study found smaller savings that appeared after month 7."],
+ ["bench", "Benchmark-informed", "Intermountain Healthcare (2016): 23% fewer emergency department visits and 11% fewer admissions with integrated team care."],
+ ["bench", "Benchmark-informed", "Advancing Integrated Mental Health Solutions (AIMS) Center: at least 80% of the caseload has a follow-up contact after the first assessment."],
+ ["local", "Starting point, needs review", "No published standard. Feeds the DSF-E follow-up rate, a Star measure from 2027."],
+ ["local", "Starting point, needs review", "No numeric standard. The Advancing Integrated Mental Health Solutions (AIMS) Center suggests 30 days of outreach before closing a referral."],
+ ["bench", "Benchmark-informed", ""],
+ ["bench", "Benchmark-informed", "Advancing Integrated Mental Health Solutions (AIMS) Center: 80% or more of the caseload has a care manager contact each period, with check-ins every 2 weeks for patients scoring 10 or higher."],
+ ["std", "Model standard", "Advancing Integrated Mental Health Solutions (AIMS) Center treat-to-target: change treatment when a patient hasn't improved 50% by 10 to 12 weeks."],
+ ["std", "Model standard", "Advancing Integrated Mental Health Solutions (AIMS) Center: at least 80% of patients who aren't improving should have a psychiatric consult within 2 months."],
+ ["local", "Starting point, needs review", "No published benchmark. The Advancing Integrated Mental Health Solutions (AIMS) Center asks programs to track whether recommendations were acted on."],
+ ["bench", "Benchmark-informed", "Advancing Integrated Mental Health Solutions (AIMS) Center: about 60 to 80 per full-time care manager. Start near 60 to 70 for complex seniors."],
+ ["bench", "Benchmark-informed", "Advancing Integrated Mental Health Solutions (AIMS) Center: average episode of 16 to 24 weeks, with 10% to 20% of the caseload in relapse prevention."],
+ ["std", "Model standard", "Advancing Integrated Mental Health Solutions (AIMS) Center: 2 to 3 hours of psychiatric consultant time per full-time care manager each week."],
+ ["std", "Model standard", ""],
+ ["bench", "Benchmark-informed", "IMPACT trial in older adults: 49% response and 30% remission at 6 months. Advancing Integrated Mental Health Solutions (AIMS) Center: at least 50% of the caseload improved 50%."],
+ ["std", "Safety standard", "Every positive answer on item 9 gets a same-day risk assessment."],
+ ["ph", "Placeholder", "Replace with National Committee for Quality Assurance (NCQA) percentiles or the health plan's targets."],
+ ["local", "Starting point, needs review", "No Collaborative Care benchmark. Set after the first survey round."],
+ ["local", "Context only", ""],
+ ["local", "Not applicable", ""],
+ ["ph", "Placeholder", "New Star measure with no cut points yet. Set with the Humana Stars team."],
+ ["ph", "Placeholder", "Weight 3 in the 2027 Star Ratings per the Centers for Medicare and Medicaid Services (CMS) fact sheet. Set with the Humana Stars team."]
+];
+var QS=["All","Performance","Referral and follow-up","Bottlenecks","Capacity","Outcomes","Actions"];
+var defQ="All";
+var ORDER=[0, 1, 2, 3, 4, 23, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 24, 20, 22];
+function renderDefs(){
+  $("defFilter").innerHTML=QS.map(function(q){return '<button class="fbtn" aria-pressed="'+(q===defQ)+'" data-q="'+q+'">'+q+'</button>';}).join("");
+  $("defBody").innerHTML=ORDER.map(function(i){return[DEFS[i],i];}).filter(function(x){return defQ==="All"||x[0][1]===defQ;}).map(function(x){var d=x[0],b=BASIS[x[1]];return '<tr id="def-'+x[1]+'" tabindex="-1"><td><b>'+esc(d[0])+'</b><span class="basis-wrap"><span class="basis '+b[0]+'">'+esc(b[1])+'</span>'+(b[2]?'<span class="basis-note">'+esc(b[2])+'</span>':'')+'</span></td><td>'+esc(d[2])+'</td><td><b>'+esc(d[3])+'</b></td><td>'+esc(d[4])+'</td><td><span class="qtag">'+esc(d[1])+'</span></td><td>'+esc(d[5])+'</td><td>'+esc(d[6])+'</td></tr>';}).join("");
+}
+$("defFilter").addEventListener("click",function(e){var b=e.target.closest("[data-q]");if(b){defQ=b.getAttribute("data-q");renderDefs();}});
+renderDefs();
+var ABBR=[["AIMS","Advancing Integrated Mental Health Solutions (University of Washington center that developed Collaborative Care)"],["AMM","Antidepressant Medication Management (HEDIS)"],["APRN","Advanced Practice Registered Nurse"],["BHCM","Behavioral health care manager"],["C-SSRS","Columbia Suicide Severity Rating Scale"],["CMS","Centers for Medicare and Medicaid Services"],["CoCM","Collaborative Care Model"],["DSF-E","Depression Screening and Follow-Up (HEDIS)"],["ED","Emergency department"],["FTE","Full-time equivalent"],["FUH","Follow-Up After Hospitalization for Mental Illness (HEDIS)"],["HOS","Health Outcomes Survey (Medicare Advantage member survey)"],["GAD-7","Generalized Anxiety Disorder 7-item scale"],["HEDIS","Healthcare Effectiveness Data and Information Set"],["LCSW","Licensed Clinical Social Worker"],["MA","Medicare Advantage"],["NCQA","National Committee for Quality Assurance"],["PA-C","Physician Assistant, Certified"],["PCP","Primary care provider"],["PHQ-9","Patient Health Questionnaire, 9 items (PHQ-2 is the first two)"],["PMPM","Per member per month"],["TCOC","Total cost of care"]];
+$("abbrBody").innerHTML=ABBR.map(function(a){return '<tr><td style="width:110px"><b>'+a[0]+'</b></td><td>'+esc(a[1])+'</td></tr>';}).join("");
+
+/* ---------- assumptions ---------- */
+$("assumeDoc").innerHTML=
+'<div class="panel"><h2>Assumptions behind the mock-up</h2><ul>'+
+'<li>One program serving 8 PCP panels of about 500 seniors each, roughly 4,000 attributed patients, most in Medicare Advantage.</li>'+
+'<li>Team of 4 full-time LCSW care managers, a psychologist for brief therapy, and a psychiatric consultant at 0.5 FTE (about 20 hours a week, about 9 of them on caseload review).</li>'+
+'<li>Data comes from athenaOne (screening, orders, visits), a Collaborative Care registry (contacts, scores, time, reviews), the health plan (claims, HEDIS gaps), and patient and PCP surveys.</li>'+
+'<li>All names, patient IDs, and numbers are fictional. Patient-level views show IDs instead of names, as a production version should for anyone outside the care team.</li>'+
+'<li>Targets marked "starting point, needs review" should be set with clinical leadership against the program\u2019s baseline. HEDIS targets should be replaced with NCQA percentiles or the health plan\u2019s goals.</li>'+
+'<li>Cost comparison uses a propensity-matched group and needs 6 to 12 months of claims before it means much. A production version should use the health plan’s actuarial method and show a range.</li>'+
+'<li>Star Ratings timing: Depression Screening and Follow-Up (DSF-E) is a Star measure starting with measurement year 2027. Improving or Maintaining Mental Health is triple-weighted in the 2027 Star Ratings.</li></ul></div>'+
+'<div class="panel"><h2>How leaders would use it</h2><div class="cad">'+
+'<div><h4>Daily huddle</h4><p>Care team reviews the work queues: safety items, overdue contacts, and new positive screens without a referral.</p></div>'+
+'<div><h4>Weekly case review</h4><p>Psychiatric consultant and care managers walk the treat-to-target view, starting with patients in the shaded zone who have never been reviewed.</p></div>'+
+'<div><h4>Monthly operations review</h4><p>Program delivery lead and medical director go through the scorecard and priority actions, assign owners, and check last month’s items.</p></div>'+
+'<div><h4>Quarterly planning</h4><p>Leadership looks at outcomes, HEDIS, and cost against the plan, and uses the capacity model below to time hiring.</p></div></div></div>'+
+'<div class="panel"><h2>Future-state planning</h2><p>Caseload in steady state is roughly new enrollments per month times average months in the program. That gives a simple staffing model leaders can test.</p>'+
+'<div class="formula num">Care managers needed = (enrollments per month × average months in program) ÷ target caseload<br><br>Today: (42 × 6.5) ÷ 70 = <b>3.9 FTE</b>, close to the current 4.0 and why one caseload is already over.<br>At 60% reach (367 patients): 367 ÷ 70 = <b>5.2 FTE</b>. Psychiatry can stay at 0.5 FTE if caseload review is protected, since the AIMS Center guide for 5 care managers is 10 to 16 hours a week.</div><p>The average stay here is 6.5 months, above the AIMS Center range of 4 to 6 months. Graduating patients on time to a relapse prevention plan frees capacity before any new hire.</p>'+
+'</div>';
+
+/* ---------- tabs ---------- */
+var VIEWS=["dashboard","definitions","assumptions"];
+function setView(v,noHash){
+  if(VIEWS.indexOf(v)<0)v="dashboard";
+  VIEWS.forEach(function(k){$("view-"+k).hidden=k!==v;$("tab-"+k).setAttribute("aria-selected",String(k===v));});
+  if(!noHash){try{history.replaceState(null,"","#"+v);}catch(e){}}
+}
+var backBtn=document.createElement("button");backBtn.className="btn backbtn";backBtn.hidden=true;backBtn.innerHTML='<svg aria-hidden="true" style="transform:rotate(180deg)"><use href="#i-open"/></svg>Back to dashboard';document.body.appendChild(backBtn);
+function hideBack(){backBtn.classList.remove("on");setTimeout(function(){backBtn.hidden=true;},200);}
+backBtn.addEventListener("click",function(){setView("dashboard");hideBack();var sc=document.getElementById("scorecard");if(sc)sc.scrollIntoView({block:"start",behavior:reduceMotion()?"auto":"smooth"});});
+function reduceMotion(){try{return window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){return false;}}
+document.addEventListener("click",function(e){var t=e.target.closest("[data-def]");if(!t)return;defQ="All";renderDefs();setView("definitions");window.scrollTo(0,0);var r=document.getElementById("def-"+t.getAttribute("data-def"));if(!r)return;
+  r.classList.add("hl");
+  requestAnimationFrame(function(){r.scrollIntoView({block:"center",behavior:reduceMotion()?"auto":"smooth"});setTimeout(function(){r.classList.add("pulse");r.focus({preventScroll:true});},reduceMotion()?0:450);setTimeout(function(){r.classList.remove("pulse");},2700);});
+  backBtn.hidden=false;requestAnimationFrame(function(){backBtn.classList.add("on");});
+});
+document.querySelector(".tabs").addEventListener("click",function(e){if(e.target.closest("[data-view]"))hideBack();});
+document.querySelector(".tabs").addEventListener("click",function(e){var b=e.target.closest("[data-view]");if(b){setView(b.getAttribute("data-view"));window.scrollTo(0,0);}});
+setView((location.hash||"#dashboard").slice(1),true);
+window.__tandem={openDrill:openDrill,setView:setView};
+})();
+</script>
+
+</body>
+</html>

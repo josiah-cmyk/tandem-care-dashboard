@@ -401,7 +401,7 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
       <div class="grid">
         <section class="panel span-6" aria-labelledby="h-cl">
           <h3 id="h-cl">Active caseload by care manager</h3>
-          <p class="sub">Active patients as of Oct 19, 2026. Shaded band is the target range of 60 to 80 per full-time care manager.</p>
+          <p class="sub">Active patients as of Oct 19, 2026. Shaded band is the Advancing Integrated Mental Health Solutions (AIMS) Center range of 60 to 80 per full-time care manager.</p>
           <div class="hbars" id="caseload"></div>
           <div class="stat-row" id="capStats"></div>
         </section>
@@ -687,7 +687,7 @@ $("caseload").innerHTML=BHCM.map(function(b,i){
   var over=b.n>80;
   return '<button class="hb" data-drill="bhcm" data-arg="'+i+'" data-tip="<b>'+esc(b.name)+'</b><br>'+b.n+' active, '+b.newM+' new in last 4 weeks<br>'+b.off+' not on target, '+b.rem+' in remission"><span class="hb-name">'+esc(b.short)+'</span><span class="hb-track"><span class="hb-band" style="left:60%;width:20%"></span><span class="hb-bar" style="width:'+(100*b.n/cmax)+'%;background:'+(over?'var(--serious)':'var(--s1)')+'"></span></span><span class="hb-v num">'+b.n+'</span></button>';
 }).join("");
-$("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care manager FTE (LCSW)</span></div><div class="stat"><b class="num">9 of 20 hrs</b><span>Psychiatric consultant hours on caseload review, per week</span></div><div class="stat"><b class="num">8 to 12 hrs</b><span>Advancing Integrated Mental Health Solutions (AIMS) Center guide for 4 care managers</span></div>';
+$("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care manager FTE (LCSW)</span></div><div class="stat"><b class="num">6.5 months</b><span>Average stay in the program. AIMS Center guide: 4 to 6</span></div><div class="stat"><b class="num">9 of 20 hrs</b><span>Psychiatric consultant hours on caseload review per week. AIMS Center guide: 8 to 12</span></div>';
 
 /* ---------- flow line chart ---------- */
 (function(){
@@ -1039,10 +1039,7 @@ $("assumeDoc").innerHTML=
 '<div><h4>Daily huddle</h4><p>Care team reviews the work queues: safety items, overdue contacts, and new positive screens without a referral.</p></div>'+
 '<div><h4>Weekly case review</h4><p>Psychiatric consultant and care managers walk the treat-to-target view, starting with patients in the shaded zone who have never been reviewed.</p></div>'+
 '<div><h4>Monthly operations review</h4><p>Program delivery lead and medical director go through the scorecard and priority actions, assign owners, and check last month’s items.</p></div>'+
-'<div><h4>Quarterly planning</h4><p>Leadership looks at outcomes, HEDIS, and cost against the plan, and uses the capacity model below to time hiring.</p></div></div></div>'+
-'<div class="panel"><h2>Future-state planning</h2><p>Caseload in steady state is roughly new enrollments per month times average months in the program. That gives a simple staffing model leaders can test.</p>'+
-'<div class="formula num">Care managers needed = (enrollments per month × average months in program) ÷ target caseload<br><br>Today: (42 × 6.5) ÷ 70 = <b>3.9 FTE</b>, close to the current 4.0 and why one caseload is already over.<br>At 60% reach (367 patients): 367 ÷ 70 = <b>5.2 FTE</b>. Psychiatry can stay at 0.5 FTE if caseload review is protected, since the AIMS Center guide for 5 care managers is 10 to 16 hours a week.</div><p>The average stay here is 6.5 months, above the AIMS Center range of 4 to 6 months. Graduating patients on time to a relapse prevention plan frees capacity before any new hire.</p>'+
-'</div>';
+'<div><h4>Quarterly planning</h4><p>Leadership looks at outcomes, HEDIS, and cost against the plan, and uses the capacity view, including caseloads, referrals vs. discharges, and average stay, to time hiring.</p></div></div></div>';
 
 /* ---------- tabs ---------- */
 var VIEWS=["dashboard","definitions","assumptions"];

@@ -204,6 +204,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bl:hover{background:var(--surface-2)}
 .bl-name{font-size:15px;color:var(--ink-2);line-height:1.25}
 .bl-name small{display:block;color:var(--muted);font-size:13px}
+.bl-def{display:block;appearance:none;border:0;background:none;padding:0;margin-top:1px;text-align:left;font:inherit;font-size:13px;line-height:1.3;color:var(--accent);cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.bl-def:hover{text-decoration-style:solid}
+section[aria-labelledby="h-out"]{display:flex;flex-direction:column}
+#bullets{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
 .bl-track{position:relative;height:14px;background:var(--grid);border-radius:4px}
 .bl-bar{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--s1)}
 .bl-tgt{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink)}
@@ -418,9 +422,8 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
       <div class="grid">
         <section class="panel span-7" aria-labelledby="h-out">
           <h3 id="h-out">Clinical outcomes, safety, and experience</h3>
-          <p class="sub">Bar is the current rate. Black tick is the target. Select a measure to see open gaps. Each measure lists its time period.</p>
+          <p class="sub">Bar is the current rate. Black tick is the target. Select a measure to see open gaps.</p>
           <div class="bullets" id="bullets"></div>
-          <p class="note">AMM is shown as a secondary measure because the National Committee for Quality Assurance (NCQA) is retiring it from health plan ratings.</p>
         </section>
         <div class="span-5 stack">
           <section class="panel" aria-labelledby="h-tcoc">
@@ -436,8 +439,8 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
             <div class="cost-foot"><span>Cost difference <b>7.6% lower</b>, likely range 1.2% to 13.8% lower</span><span>Updated quarterly. Claims lag about 30 days.</span></div>
           </section>
           <section class="panel" aria-labelledby="h-stars">
-            <h3 id="h-stars">Medicare Star Ratings link</h3>
-            <p class="sub">DSF-E becomes a Star measure in measurement year 2027. Improving or Maintaining Mental Health is triple-weighted in the 2027 Star Ratings. Targets are placeholders until set with the Humana Stars team.</p>
+            <h3 id="h-stars">Medicare Star Ratings</h3>
+            <p class="sub">Depression Screening and Follow-Up (DSF-E) becomes a Star measure in measurement year 2027.</p>
             <div class="bullets" id="stars"></div>
           </section>
         </div>
@@ -714,19 +717,19 @@ $("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care mana
 
 /* ---------- outcome bullets ---------- */
 var BUL=[
-  {n:"Response at 6 months",sub:"50%+ drop in PHQ-9. Enrolled Jan to Mar 2026",v:48,t:50,s:"warn",drill:"response"},
-  {n:"Remission at 6 months",sub:"PHQ-9 under 5. Enrolled Jan to Mar 2026",v:27,t:30,s:"warn",drill:"response"},
-  {n:"Anxiety improvement at 6 months",sub:"GAD-7 down 5+ points. Enrolled Jan to Mar 2026",v:51,t:50,s:"good",drill:"response"},
-  {n:"Same-day suicide risk check",sub:"Positive PHQ-9 item 9 with a C-SSRS that day. Jul to Sep 2026",v:97,t:100,s:"crit",drill:"safety"},
-  {n:"7-day follow-up after psychiatric stay",sub:"HEDIS FUH. Year to date 2026",v:52,t:60,s:"serious",drill:"fuh"},
-  {n:"Patients who would recommend Tandem Care",sub:"Patient survey, n=88. Jul to Sep 2026",v:91,t:90,s:"good",drill:null},
-  {n:"Antidepressant medication management",sub:"HEDIS AMM, secondary. Year to date 2026",v:67,t:70,s:"warn",drill:"amm",sec:true}
+  {def:17,n:"Response at 6 months",sub:"50%+ drop in PHQ-9. Enrolled Jan to Mar 2026",v:48,t:50,s:"warn",drill:"response"},
+  {def:17,n:"Remission at 6 months",sub:"PHQ-9 under 5. Enrolled Jan to Mar 2026",v:27,t:30,s:"warn",drill:"response"},
+  {def:17,n:"Anxiety improvement at 6 months",sub:"GAD-7 down 5+ points. Enrolled Jan to Mar 2026",v:51,t:50,s:"good",drill:"response"},
+  {def:18,n:"Same-day suicide risk check",sub:"Positive PHQ-9 item 9 with a C-SSRS that day. Jul to Sep 2026",v:97,t:100,s:"crit",drill:"safety"},
+  {def:19,n:"7-day follow-up after psychiatric stay",sub:"HEDIS FUH. Year to date 2026",v:52,t:60,s:"serious",drill:"fuh"},
+  {def:20,n:"Patients who would recommend Tandem Care",sub:"Patient survey, n=88. Jul to Sep 2026",v:91,t:90,s:"good",drill:null},
+  {def:19,n:"Antidepressant medication management",sub:"HEDIS AMM, secondary. Year to date 2026",v:67,t:70,s:"warn",drill:"amm",sec:true}
 ];
 var STARS=[
-  {n:"Depression screening and follow-up",sub:"HEDIS DSF-E. 12 months to Sep 2026",v:DSF,t:80,s:DSF>=80?"good":"warn",drill:"screen"},
-  {n:"Improving or Maintaining Mental Health",sub:"Health Outcomes Survey, plan level. 2026 results",v:79,t:82,s:"warn",drill:null}
+  {def:23,n:"Depression screening and follow-up",sub:"HEDIS DSF-E. 12 months to Sep 2026",v:DSF,t:80,s:DSF>=80?"good":"warn",drill:"screen"},
+  {def:24,n:"Improving or Maintaining Mental Health",sub:"Health Outcomes Survey, plan level. 2026 results. Triple-weighted in 2027 Stars",v:79,t:82,s:"warn",drill:null}
 ];
-function bulHTML(b){return '<button class="bl'+(b.sec?' sec':'')+'"'+(b.drill?' data-drill="'+b.drill+'"':' style="cursor:default"')+' data-tip="<b>'+esc(b.n)+'</b><br>'+b.v+'% now, target '+b.t+'%"><span class="bl-name">'+esc(b.n)+'<small>'+esc(b.sub)+'</small></span><span class="bl-track"><span class="bl-bar" style="width:'+b.v+'%;background:'+(b.sec?'var(--dot-muted)':b.s==="good"||b.s==="warn"?'var(--s1)':b.s==="crit"?'var(--crit)':'var(--serious)')+'"></span><span class="bl-tgt" style="left:'+b.t+'%"></span></span><span class="bl-v"><b class="num">'+b.v+'%</b>'+chip(b.s)+'</span></button>';}
+function bulHTML(b){return '<div class="bl'+(b.sec?' sec':'')+'"'+(b.drill?' data-drill="'+b.drill+'" role="button" tabindex="0"':' style="cursor:default"')+' data-tip="<b>'+esc(b.n)+'</b><br>'+b.v+'% now, target '+b.t+'%"><span class="bl-name">'+esc(b.n)+'<button class="bl-def" data-def="'+b.def+'" title="See how this metric is defined">'+esc(b.sub)+'</button></span><span class="bl-track"><span class="bl-bar" style="width:'+b.v+'%;background:'+(b.sec?'var(--dot-muted)':b.s==="good"||b.s==="warn"?'var(--s1)':b.s==="crit"?'var(--crit)':'var(--serious)')+'"></span><span class="bl-tgt" style="left:'+b.t+'%"></span></span><span class="bl-v"><b class="num">'+b.v+'%</b>'+chip(b.s)+'</span></div>';}
 $("bullets").innerHTML=BUL.map(bulHTML).join("");
 $("stars").innerHTML=STARS.map(bulHTML).join("");
 
@@ -933,6 +936,7 @@ function closeDrawer(){
   if(lastFocus&&lastFocus.focus)lastFocus.focus();
 }
 document.addEventListener("click",function(e){
+  if(e.target.closest("[data-def]"))return;
   var t=e.target.closest("[data-drill]");
   if(t){var a=t.getAttribute("data-arg");openDrill(t.getAttribute("data-drill"),a===null?undefined:+a,false);hideTip();return;}
   var pt=e.target.closest("[data-patient]");
@@ -946,7 +950,7 @@ $("dClose").addEventListener("click",closeDrawer);
 $("scrim").addEventListener("click",closeDrawer);
 document.addEventListener("keydown",function(e){
   if(e.key==="Escape"&&!$("drawer").hidden){closeDrawer();}
-  if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("tr.click")){e.preventDefault();e.target.click();}
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("tr.click,[role=button][data-drill]")){e.preventDefault();e.target.click();}
   if(e.key==="Tab"&&!$("drawer").hidden){var f=$("drawer").querySelectorAll('button,[tabindex="0"],h2[tabindex]');if(!f.length)return;var first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
 });
 
@@ -977,7 +981,7 @@ var DEFS=[
  ["Referrals vs. discharges", "Capacity", "New referrals and discharges (graduated, transferred, or disenrolled) per week, plus average weeks in treatment.", "Roughly balanced, with an average stay of 16 to 24 weeks", "If referrals run above discharges, the caseload grows until access breaks. Drives hiring timing.", "Registry", "Trend only"],
  ["Psychiatric caseload review time", "Capacity", "Hours per week the psychiatric consultant spends reviewing caseloads with care managers, compared with hours allocated.", "2 to 3 hours per care manager per week", "Protected review time, more than headcount, is usually the limit. Four care managers need about 8 to 12 hours a week.", "Consultant schedule, registry", "Case review list"],
  ["CoCM time minimum met", "Capacity", "Patient-months where care manager time met the billing minimum.", "80% or more", "A check on model intensity.", "Registry time log", "Care manager"],
- ["Response and remission at 6 months", "Outcomes", "For patients enrolled in a cohort, the share whose Patient Health Questionnaire-9 (PHQ-9) score dropped 50% or more (response) or fell below 5 (remission) at 6 months, plus or minus 30 days.", "Response 50% or more, remission 30% or more", "The clinical result the model is built to produce. Matches the Healthcare Effectiveness Data and Information Set (HEDIS) Depression Remission or Response (DRR-E) measure.", "Registry", "Care manager, then patients not on target"],
+ ["Response and remission at 6 months", "Outcomes", "For patients enrolled in a cohort, the share whose Patient Health Questionnaire-9 (PHQ-9) score dropped 50% or more (response) or fell below 5 (remission) at 6 months, plus or minus 30 days. Anxiety improvement is a drop of 5 or more points on the Generalized Anxiety Disorder-7 (GAD-7) at 6 months.", "Response 50% or more, remission 30% or more", "The clinical result the model is built to produce. Matches the Healthcare Effectiveness Data and Information Set (HEDIS) Depression Remission or Response (DRR-E) measure.", "Registry", "Care manager, then patients not on target"],
  ["Same-day suicide risk assessment", "Outcomes", "Positive answers to Patient Health Questionnaire-9 (PHQ-9) item 9, which asks about thoughts of self-harm, with a Columbia Suicide Severity Rating Scale (C-SSRS) assessment documented the same day.", "100%", "Patient safety. Any miss is reviewed the same day.", "athenaOne", "Patient record"],
  ["Healthcare Effectiveness Data and Information Set (HEDIS) measures: FUH and AMM", "Outcomes", "Year-to-date rates for patients attributed to these PCPs. Follow-Up After Hospitalization for Mental Illness (FUH): a mental health visit within 7 days of a psychiatric discharge. Antidepressant Medication Management (AMM): patients who stay on a new antidepressant. AMM is secondary because the National Committee for Quality Assurance (NCQA) is retiring it from health plan ratings.", "Health plan targets", "FUH now counts Collaborative Care visits as follow-up, so Tandem can close these gaps directly.", "Health plan quality data", "Open gaps by patient"],
  ["Patient experience", "Outcomes", "Patients who would recommend Tandem Care on the program survey, shown with the response count.", "90% or more", "Patients who value the program stay engaged, and engagement drives outcomes.", "Surveys", "None"],

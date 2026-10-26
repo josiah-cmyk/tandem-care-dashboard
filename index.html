@@ -178,6 +178,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .sw{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
 .sw.ln{height:3px;border-radius:2px;width:16px}
+.assume{margin-top:10px;font-size:13.5px;color:var(--ink-2)}
+.assume b{font-size:13.5px}
+.assume ul{margin:4px 0 0;padding-left:18px}
+.assume li{margin:2px 0}
 .sw.ln.dash{background:repeating-linear-gradient(90deg,var(--ink) 0 5px,transparent 5px 9px)}
 .sw.dot{border-radius:50%}
 .sw.ring{border-radius:50%;background:transparent!important;border:2px solid var(--ink)}
@@ -396,11 +400,10 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
           <div class="stat-row" id="capStats"></div>
         </section>
         <section class="panel span-6" aria-labelledby="h-flow">
-          <h3 id="h-flow">Capacity vs. active patients</h3>
-          <p class="sub">Monthly, May to Oct 2026 actual, Nov 2026 to Jan 2027 forecast. Capacity is 4 care managers at 80 patients each, the top of the AIMS Center range.</p>
+          <h3 id="h-flow" style="margin-bottom:10px">Capacity vs. active patients</h3>
           <div class="legend"><span><i class="sw" style="background:var(--cap)"></i>Capacity</span><span><i class="sw ln" style="background:var(--ink)"></i>Active patients</span><span><i class="sw ln dash"></i>Forecast</span></div>
           <div id="flow"></div>
-          <p class="note" id="flowNote"></p>
+          <div class="assume" id="flowNote"></div>
         </section>
       </div>
 
@@ -712,7 +715,7 @@ $("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care mana
   for(var i=0;i<n;i++){
     var bx=m.l+bw*i+bw*0.18, bwid=bw*0.64;
     s+='<path d="M'+bx.toFixed(1)+' '+y(0)+' V'+(y(cap)+4)+' q0 -4 4 -4 h'+(bwid-8).toFixed(1)+' q4 0 4 4 V'+y(0)+' Z" fill="var(--cap)"/>';
-    s+='<text x="'+cx(i)+'" y="'+(H-m.b+18)+'" text-anchor="middle">'+months[i]+'</text>';
+    s+='<text x="'+cx(i)+'" y="'+(H-m.b+18)+'" text-anchor="middle">'+months[i]+(i===0?' 2026':i===8?' 2027':'')+'</text>';
   }
   function pts(a,b){var o=[];for(var i=a;i<=b;i++)o.push((i===a?'M':'L')+cx(i).toFixed(1)+' '+y(vol[i]).toFixed(1));return o.join(' ');}
   s+='<path d="'+pts(0,nAct-1)+'" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>';
@@ -726,7 +729,7 @@ $("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care mana
   s+='<text x="'+(m.l+bw*0.18)+'" y="'+(y(cap)-7)+'" class="lbl">Capacity '+cap+'</text>';
   s+='</svg>';
   $("flow").innerHTML=s;
-  $("flowNote").innerHTML='<b>Next hire needed by January 2027.</b> The forecast assumes the current net growth of about '+growth+' patients a month (referrals minus discharges). Hiring and onboarding a care manager takes about 3 months, so recruiting should start now.';
+  $("flowNote").innerHTML='<b>Assumptions</b><ul><li>'+growth+' net new patients per month</li><li>AIMS Center care manager capacity: 80 patients max</li></ul>';
 })();
 
 /* ---------- outcome bullets ---------- */

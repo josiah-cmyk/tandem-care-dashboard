@@ -209,7 +209,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bl-name small{display:block;color:var(--muted);font-size:13px}
 .bl-def{display:block;appearance:none;border:0;background:none;padding:0;margin-top:1px;text-align:left;font:inherit;font-size:13px;line-height:1.3;color:var(--accent);cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
 .bl-def:hover{text-decoration-style:solid}
-section[aria-labelledby="h-out"]{display:flex;flex-direction:column}
+section[aria-labelledby="h-out"],section[aria-labelledby="h-fun"]{display:flex;flex-direction:column}
+#funnel{flex:1;display:flex;flex-direction:column;justify-content:space-evenly}
+#funnel .f-step{display:grid;gap:2px}
 #bullets{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
 .bl-track{position:relative;height:14px;background:var(--grid);border-radius:4px}
 .bl-bar{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--s1)}
@@ -360,15 +362,16 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
       <div class="region-head"><h2>Are patients getting in and moving through care?</h2><p>Access and the referral funnel</p></div>
       <div class="grid">
         <section class="panel span-7" aria-labelledby="h-fun">
-          <h3 id="h-fun" style="margin-bottom:12px">Screening to follow-up</h3>
+          <h3 id="h-fun">Referral to follow-up</h3>
+          <p class="sub">Tandem Care referrals, Jul 1 to Sep 30, 2026.</p>
           <div class="funnel" id="funnel"></div>
+          <div class="stat-row" id="accessStats"></div>
         </section>
         <div class="span-5 stack">
         <section class="panel" aria-labelledby="h-wait">
           <h3 id="h-wait">Days from referral to initial assessment</h3>
           <p class="sub">Median by care manager, referrals Jul 1 to Sep 30, 2026. Target is 14 days or less (black tick).</p>
           <div class="hbars" id="waits"></div>
-          <div class="stat-row" id="accessStats"></div>
         </section>
         <section class="panel" aria-labelledby="h-sched">
           <h3 id="h-sched">Scheduling and attendance</h3>
@@ -443,7 +446,7 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
           </section>
           <section class="panel" aria-labelledby="h-stars">
             <h3 id="h-stars">Medicare Star Ratings</h3>
-            <p class="sub">Depression Screening and Follow-Up (DSF-E), shown at the top of the screening funnel, becomes a Star measure in measurement year 2027.</p>
+            <p class="sub">Depression Screening and Follow-Up (DSF-E) becomes a Star measure in measurement year 2027.</p>
             <div class="bullets" id="stars"></div>
           </section>
         </div>
@@ -620,10 +623,7 @@ $("actions").innerHTML=ACTIONS.map(function(a,i){return '<li class="act"><span c
 
 /* ---------- funnel ---------- */
 var fmax=FUN[0].n;
-$("funnel").innerHTML='<div class="scr"><div class="scr-h"><b>Depression screening and follow-up (HEDIS DSF-E)</b><span>12 months to Sep 30, 2026. A Star Ratings measure from measurement year 2027.</span></div>'+
-  '<button class="bl" data-drill="screen" data-tip="<b>DSF-E rate 1</b><br>'+scrT.toLocaleString()+' of '+attrT.toLocaleString()+' attributed seniors screened"><span class="bl-name">Seniors screened<small>Rate 1, '+scrT.toLocaleString()+' of '+attrT.toLocaleString()+'</small></span><span class="bl-track"><span class="bl-bar" style="width:'+DSF1+'%"></span><span class="bl-tgt" style="left:80%"></span></span><span class="bl-v"><b class="num">'+DSF1+'%</b>'+chip(DSF1>=80?"good":"warn")+'</span></button>'+
-  '<button class="bl" data-drill="notref" data-tip="<b>DSF-E rate 2</b><br>Positive screens with follow-up care within 30 days"><span class="bl-name">Positives followed up in 30 days<small>Rate 2, any follow-up care</small></span><span class="bl-track"><span class="bl-bar" style="width:'+DSF2+'%"></span><span class="bl-tgt" style="left:80%"></span></span><span class="bl-v"><b class="num">'+DSF2+'%</b>'+chip(DSF2>=80?"good":"warn")+'</span></button></div>'+
-  '<p class="sub-h">Tandem Care referral funnel<span>Jul 1 to Sep 30, 2026</span></p>'+FUN.map(function(f,i){
+$("funnel").innerHTML=FUN.map(function(f,i){
   var w=Math.max(2,100*f.n/fmax);
   var conv=i===0?"":"<small>"+pct(f.n,FUN[i-1].n)+"% of prior</small>";
   var leak="";
@@ -731,6 +731,8 @@ var BUL=[
   {def:19,n:"Antidepressant medication management",sub:"HEDIS AMM, secondary. Year to date 2026",v:67,t:70,s:"warn",drill:"amm",sec:true}
 ];
 var STARS=[
+  {def:23,n:"Seniors screened for depression",sub:"DSF-E rate 1, "+scrT.toLocaleString()+" of "+attrT.toLocaleString()+". 12 months to Sep 2026",v:DSF1,t:80,s:DSF1>=80?"good":"warn",drill:"screen"},
+  {def:23,n:"Positive screens followed up in 30 days",sub:"DSF-E rate 2. 12 months to Sep 2026",v:DSF2,t:80,s:DSF2>=80?"good":"warn",drill:"notref"},
   {def:24,n:"Improving or Maintaining Mental Health",sub:"Health Outcomes Survey, plan level. 2026 results. Triple-weighted in 2027 Stars",v:79,t:82,s:"warn",drill:null}
 ];
 function bulHTML(b){return '<div class="bl'+(b.sec?' sec':'')+'"'+(b.drill?' data-drill="'+b.drill+'" role="button" tabindex="0"':' style="cursor:default"')+' data-tip="<b>'+esc(b.n)+'</b><br>'+b.v+'% now, target '+b.t+'%"><span class="bl-name">'+esc(b.n)+'<button class="bl-def" data-def="'+b.def+'" title="See how this metric is defined">'+esc(b.sub)+'</button></span><span class="bl-track"><span class="bl-bar" style="width:'+b.v+'%;background:'+(b.sec?'var(--dot-muted)':b.s==="good"||b.s==="warn"?'var(--s1)':b.s==="crit"?'var(--crit)':'var(--serious)')+'"></span><span class="bl-tgt" style="left:'+b.t+'%"></span></span><span class="bl-v"><b class="num">'+b.v+'%</b>'+chip(b.s)+'</span></div>';}

@@ -443,7 +443,7 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
           </section>
           <section class="panel" aria-labelledby="h-stars">
             <h3 id="h-stars">Medicare Star Ratings</h3>
-            <p class="sub">Depression Screening and Follow-Up (DSF-E) becomes a Star measure in measurement year 2027.</p>
+            <p class="sub">Depression Screening and Follow-Up (DSF-E), shown at the top of the screening funnel, becomes a Star measure in measurement year 2027.</p>
             <div class="bullets" id="stars"></div>
           </section>
         </div>
@@ -731,7 +731,6 @@ var BUL=[
   {def:19,n:"Antidepressant medication management",sub:"HEDIS AMM, secondary. Year to date 2026",v:67,t:70,s:"warn",drill:"amm",sec:true}
 ];
 var STARS=[
-  {def:23,n:"Depression screening and follow-up",sub:"HEDIS DSF-E. 12 months to Sep 2026",v:DSF,t:80,s:DSF>=80?"good":"warn",drill:"screen"},
   {def:24,n:"Improving or Maintaining Mental Health",sub:"Health Outcomes Survey, plan level. 2026 results. Triple-weighted in 2027 Stars",v:79,t:82,s:"warn",drill:null}
 ];
 function bulHTML(b){return '<div class="bl'+(b.sec?' sec':'')+'"'+(b.drill?' data-drill="'+b.drill+'" role="button" tabindex="0"':' style="cursor:default"')+' data-tip="<b>'+esc(b.n)+'</b><br>'+b.v+'% now, target '+b.t+'%"><span class="bl-name">'+esc(b.n)+'<button class="bl-def" data-def="'+b.def+'" title="See how this metric is defined">'+esc(b.sub)+'</button></span><span class="bl-track"><span class="bl-bar" style="width:'+b.v+'%;background:'+(b.sec?'var(--dot-muted)':b.s==="good"||b.s==="warn"?'var(--s1)':b.s==="crit"?'var(--crit)':'var(--serious)')+'"></span><span class="bl-tgt" style="left:'+b.t+'%"></span></span><span class="bl-v"><b class="num">'+b.v+'%</b>'+chip(b.s)+'</span></div>';}

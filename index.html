@@ -15,7 +15,7 @@
   --shell:#0B3550; --shell-2:#124766; --shell-ink:#F3F8FB; --shell-muted:#A9C4D6; --shell-org:#7FD3F0;
   --ink:#0F2230; --ink-2:#425665; --muted:#5D707E; --line:#D7E1E8; --line-2:#C2CFD9;
   --accent:#00739A; --accent-ink:#FFFFFF; --accent-wash:#E1F1F7; --accent-hover:#005C7C;
-  --s1:#0094C4; --s2:#eb6834; --s3:#1baf7a; --grid:#E3EAEF; --axis:#BFCBD4; --dot-muted:#A6B4BE;
+  --s1:#0094C4; --s2:#eb6834; --s3:#1baf7a; --grid:#E3EAEF; --cap:#C9E6F1; --axis:#BFCBD4; --dot-muted:#A6B4BE;
   --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
   --good-wash:#E2F3E0; --warn-wash:#FCF0D2; --serious-wash:#FBE5DB; --crit-wash:#F8DFDE;
   --good-ink:#0A5A0A; --warn-ink:#6E4A00; --serious-ink:#86381A; --crit-ink:#992020;
@@ -28,7 +28,7 @@
   --shell:#08202F; --shell-2:#0F3247; --shell-ink:#EAF3F8; --shell-muted:#8FB0C4; --shell-org:#6CCBEC;
   --ink:#E6EEF3; --ink-2:#B4C3CD; --muted:#8B9DA9; --line:#25343E; --line-2:#33444F;
   --accent:#4FC3E8; --accent-ink:#06202C; --accent-wash:#12303D; --accent-hover:#74D1EE;
-  --s1:#2BB0DF; --s2:#d95926; --s3:#199e70; --grid:#20303A; --axis:#374852; --dot-muted:#5A6A74;
+  --s1:#2BB0DF; --s2:#d95926; --s3:#199e70; --grid:#20303A; --cap:#1C3C4A; --axis:#374852; --dot-muted:#5A6A74;
   --good-wash:#14301A; --warn-wash:#332A12; --serious-wash:#3A241A; --crit-wash:#3B1C1C;
   --good-ink:#7FD67F; --warn-ink:#F4C766; --serious-ink:#F2A585; --crit-ink:#F19A9A;
   --zone:#2A1F1A; --scrim:rgba(0,0,0,.55); --shadow:0 12px 32px rgba(0,0,0,.5);
@@ -39,7 +39,7 @@
   --shell:#08202F; --shell-2:#0F3247; --shell-ink:#EAF3F8; --shell-muted:#8FB0C4; --shell-org:#6CCBEC;
   --ink:#E6EEF3; --ink-2:#B4C3CD; --muted:#8B9DA9; --line:#25343E; --line-2:#33444F;
   --accent:#4FC3E8; --accent-ink:#06202C; --accent-wash:#12303D; --accent-hover:#74D1EE;
-  --s1:#2BB0DF; --s2:#d95926; --s3:#199e70; --grid:#20303A; --axis:#374852; --dot-muted:#5A6A74;
+  --s1:#2BB0DF; --s2:#d95926; --s3:#199e70; --grid:#20303A; --cap:#1C3C4A; --axis:#374852; --dot-muted:#5A6A74;
   --good-wash:#14301A; --warn-wash:#332A12; --serious-wash:#3A241A; --crit-wash:#3B1C1C;
   --good-ink:#7FD67F; --warn-ink:#F4C766; --serious-ink:#F2A585; --crit-ink:#F19A9A;
   --zone:#2A1F1A; --scrim:rgba(0,0,0,.55); --shadow:0 12px 32px rgba(0,0,0,.5);
@@ -178,6 +178,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .sw{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
 .sw.ln{height:3px;border-radius:2px;width:16px}
+.sw.ln.dash{background:repeating-linear-gradient(90deg,var(--ink) 0 5px,transparent 5px 9px)}
 .sw.dot{border-radius:50%}
 .sw.ring{border-radius:50%;background:transparent!important;border:2px solid var(--ink)}
 
@@ -395,9 +396,9 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
           <div class="stat-row" id="capStats"></div>
         </section>
         <section class="panel span-6" aria-labelledby="h-flow">
-          <h3 id="h-flow">New referrals vs. discharges per week</h3>
-          <p class="sub">Weekly, Jul 6 to Sep 21, 2026. When referrals run above discharges, the caseload grows and waits get longer.</p>
-          <div class="legend"><span><i class="sw ln" style="background:var(--s1)"></i>Referrals</span><span><i class="sw ln" style="background:var(--s2)"></i>Discharges</span></div>
+          <h3 id="h-flow">Capacity vs. active patients</h3>
+          <p class="sub">Monthly, May to Oct 2026 actual, Nov 2026 to Jan 2027 forecast. Capacity is 4 care managers at 80 patients each, the top of the AIMS Center range.</p>
+          <div class="legend"><span><i class="sw" style="background:var(--cap)"></i>Capacity</span><span><i class="sw ln" style="background:var(--ink)"></i>Active patients</span><span><i class="sw ln dash"></i>Forecast</span></div>
           <div id="flow"></div>
           <p class="note" id="flowNote"></p>
         </section>
@@ -696,27 +697,36 @@ $("caseload").innerHTML=BHCM.map(function(b,i){
 }).join("");
 $("capStats").innerHTML='<div class="stat"><b class="num">4.0</b><span>Care manager FTE (LCSW)</span></div><div class="stat"><b class="num">6.5 months</b><span>Average stay in the program. AIMS Center guide: 4 to 6</span></div><div class="stat"><b class="num">9 of 20 hrs</b><span>Psychiatric consultant hours on caseload review per week. AIMS Center guide: 8 to 12</span></div>';
 
-/* ---------- flow line chart ---------- */
+/* ---------- capacity vs volume with forecast ---------- */
 (function(){
-  var ref=[11,12,13,12,14,13,15,14,13,15,14,16], dis=[10,9,11,10,10,11,9,10,11,10,9,10];
-  var weeks=[];for(var i=0;i<12;i++){var d=new Date(2026,6,6);d.setDate(d.getDate()+7*i);weeks.push(fmtD(d));}
-  var W=640,H=250,m={l:34,r:84,t:12,b:34},iw=W-m.l-m.r,ih=H-m.t-m.b;
-  function x(i){return m.l+iw*i/11;} function y(v){return m.t+ih*(20-v)/20;}
-  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Weekly referrals rose from 11 to 16 while discharges held near 10.">';
-  [0,5,10,15,20].forEach(function(v){s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+(v===0?'var(--axis)':'var(--grid)')+'"/><text x="'+(m.l-8)+'" y="'+(y(v)+4)+'" text-anchor="end" class="num">'+v+'</text>';});
-  [0,3,6,9,11].forEach(function(i){s+='<text x="'+x(i)+'" y="'+(H-m.b+18)+'" text-anchor="middle">'+weeks[i]+'</text>';});
-  function path(a){return a.map(function(v,i){return(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1);}).join(' ');}
-  s+='<path d="'+path(ref)+' L'+x(11)+' '+y(dis[11])+' '+dis.slice().reverse().map(function(v,j){return 'L'+x(11-j).toFixed(1)+' '+y(v).toFixed(1);}).join(' ')+' Z" fill="var(--s1)" opacity=".08"/>';
-  s+='<path d="'+path(ref)+'" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>';
-  s+='<path d="'+path(dis)+'" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round"/>';
-  s+='<circle cx="'+x(11)+'" cy="'+y(16)+'" r="4" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/><circle cx="'+x(11)+'" cy="'+y(10)+'" r="4" fill="var(--s2)" stroke="var(--surface)" stroke-width="2"/>';
-  s+='<text x="'+(x(11)+10)+'" y="'+(y(16)+4)+'" class="lbl">Referrals 16</text><text x="'+(x(11)+10)+'" y="'+(y(10)+4)+'" class="lbl">Discharges 10</text>';
-  s+='<line id="xh" x1="0" x2="0" y1="'+m.t+'" y2="'+(H-m.b)+'" stroke="var(--ink-2)" stroke-width="1" opacity="0"/>';
-  for(var i=0;i<12;i++){var bw=iw/11;s+='<rect x="'+(x(i)-bw/2)+'" y="'+m.t+'" width="'+bw+'" height="'+ih+'" fill="transparent" data-xh="'+x(i)+'" data-tip="<b>Week of '+weeks[i]+'</b><br>Referrals '+ref[i]+'<br>Discharges '+dis[i]+'<br>Net '+(ref[i]-dis[i]>0?'+':'')+(ref[i]-dis[i])+'"/>';}
+  var months=["May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan"];
+  var actual=[214,228,240,253,266,279];
+  var growth=17, cap=320, nAct=actual.length;
+  var vol=actual.slice();for(var i=0;i<3;i++)vol.push(vol[vol.length-1]+growth);
+  var W=640,H=236,m={l:40,r:16,t:26,b:30},iw=W-m.l-m.r,ih=H-m.t-m.b,n=months.length,bw=iw/n;
+  function cx(i){return m.l+bw*i+bw/2;} function y(v){return m.t+ih*(400-v)/400;}
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Active patients rise from 214 in May to 279 in October against capacity of 320. The forecast passes capacity in January 2027.">';
+  [0,100,200,300,400].forEach(function(v){s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="'+(v===0?'var(--axis)':'var(--grid)')+'"/><text x="'+(m.l-8)+'" y="'+(y(v)+4)+'" text-anchor="end" class="num">'+v+'</text>';});
+  s+='<rect x="'+(m.l+bw*nAct)+'" y="'+m.t+'" width="'+(bw*3)+'" height="'+ih+'" fill="var(--surface-2)"/>';
+  s+='<text x="'+(m.l+bw*nAct+bw*1.5)+'" y="'+(m.t-10)+'" text-anchor="middle">Forecast</text>';
+  for(var i=0;i<n;i++){
+    var bx=m.l+bw*i+bw*0.18, bwid=bw*0.64;
+    s+='<path d="M'+bx.toFixed(1)+' '+y(0)+' V'+(y(cap)+4)+' q0 -4 4 -4 h'+(bwid-8).toFixed(1)+' q4 0 4 4 V'+y(0)+' Z" fill="var(--cap)"/>';
+    s+='<text x="'+cx(i)+'" y="'+(H-m.b+18)+'" text-anchor="middle">'+months[i]+'</text>';
+  }
+  function pts(a,b){var o=[];for(var i=a;i<=b;i++)o.push((i===a?'M':'L')+cx(i).toFixed(1)+' '+y(vol[i]).toFixed(1));return o.join(' ');}
+  s+='<path d="'+pts(0,nAct-1)+'" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>';
+  s+='<path d="'+pts(nAct-1,n-1)+'" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="6 5"/>';
+  for(var i=0;i<n;i++){
+    var over=vol[i]>cap, fc=i>=nAct;
+    s+='<circle cx="'+cx(i)+'" cy="'+y(vol[i])+'" r="'+(over?5.5:4)+'" fill="'+(over?'var(--crit)':(fc?'var(--surface)':'var(--ink)'))+'" stroke="'+(over?'var(--surface)':'var(--ink)')+'" stroke-width="2"/>';
+    s+='<text x="'+cx(i)+'" y="'+(y(vol[i])-11)+'" text-anchor="middle" class="ink num halo" style="font-weight:700">'+vol[i]+'</text>';
+    s+='<rect x="'+(m.l+bw*i)+'" y="'+m.t+'" width="'+bw+'" height="'+ih+'" fill="transparent" data-tip="<b>'+months[i]+(i>=6?' 2027':' 2026')+(fc?' (forecast)':'')+'</b><br>Active patients '+vol[i]+'<br>Capacity '+cap+'<br>'+(vol[i]>cap?'Over capacity by '+(vol[i]-cap):(cap-vol[i])+' open slots')+'"/>';
+  }
+  s+='<text x="'+(m.l+bw*0.18)+'" y="'+(y(cap)-7)+'" class="lbl">Capacity '+cap+'</text>';
   s+='</svg>';
   $("flow").innerHTML=s;
-  var net=ref.reduce(function(a,b){return a+b;},0)-dis.reduce(function(a,b){return a+b;},0);
-  $("flowNote").textContent="Net growth of "+net+" patients over 12 weeks, about "+Math.round(net/12)+" a week. At this pace the program adds a full care manager's caseload (70 patients) about every "+Math.round(70/(net/12)/4.33)+" months.";
+  $("flowNote").innerHTML='<b>Next hire needed by January 2027.</b> The forecast assumes the current net growth of about '+growth+' patients a month (referrals minus discharges). Hiring and onboarding a care manager takes about 3 months, so recruiting should start now.';
 })();
 
 /* ---------- outcome bullets ---------- */

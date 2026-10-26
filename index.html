@@ -359,7 +359,7 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
         <ol class="actions" id="actions"></ol>
       </section>
 
-      <div class="region-head"><h2>Are patients getting in and moving through care?</h2><p>Access and the referral funnel</p></div>
+      <div class="region-head"><h2>Patient Throughput</h2><p>Referrals, access, and scheduling</p></div>
       <div class="grid">
         <section class="panel span-7" aria-labelledby="h-fun">
           <h3 id="h-fun">Referral to follow-up</h3>
@@ -386,7 +386,24 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
         </div>
       </div>
 
-      <div class="region-head"><h2>Where is care getting stuck?</h2><p>Treat-to-target registry and open work</p></div>
+      <div class="region-head"><h2>Capacity</h2><p>Caseload, flow, and psychiatry time</p></div>
+      <div class="grid">
+        <section class="panel span-6" aria-labelledby="h-cl">
+          <h3 id="h-cl">Active caseload by care manager</h3>
+          <p class="sub">Active patients as of Oct 19, 2026. Shaded band is the Advancing Integrated Mental Health Solutions (AIMS) Center range of 60 to 80 per full-time care manager.</p>
+          <div class="hbars" id="caseload"></div>
+          <div class="stat-row" id="capStats"></div>
+        </section>
+        <section class="panel span-6" aria-labelledby="h-flow">
+          <h3 id="h-flow">New referrals vs. discharges per week</h3>
+          <p class="sub">Weekly, Jul 6 to Sep 21, 2026. When referrals run above discharges, the caseload grows and waits get longer.</p>
+          <div class="legend"><span><i class="sw ln" style="background:var(--s1)"></i>Referrals</span><span><i class="sw ln" style="background:var(--s2)"></i>Discharges</span></div>
+          <div id="flow"></div>
+          <p class="note" id="flowNote"></p>
+        </section>
+      </div>
+
+      <div class="region-head"><h2>Program Effectiveness</h2><p>Treat-to-target, clinical outcomes, cost, and Star Ratings</p></div>
       <div class="grid">
         <section class="panel span-8" aria-labelledby="h-t2t">
           <div class="panel-top">
@@ -407,24 +424,6 @@ footer.foot{max-width:1360px;margin:8px auto 0;color:var(--muted);font-size:12.5
         </section>
       </div>
 
-      <div class="region-head"><h2>Is team capacity keeping up with demand?</h2><p>Caseload, flow, and psychiatry time</p></div>
-      <div class="grid">
-        <section class="panel span-6" aria-labelledby="h-cl">
-          <h3 id="h-cl">Active caseload by care manager</h3>
-          <p class="sub">Active patients as of Oct 19, 2026. Shaded band is the Advancing Integrated Mental Health Solutions (AIMS) Center range of 60 to 80 per full-time care manager.</p>
-          <div class="hbars" id="caseload"></div>
-          <div class="stat-row" id="capStats"></div>
-        </section>
-        <section class="panel span-6" aria-labelledby="h-flow">
-          <h3 id="h-flow">New referrals vs. discharges per week</h3>
-          <p class="sub">Weekly, Jul 6 to Sep 21, 2026. When referrals run above discharges, the caseload grows and waits get longer.</p>
-          <div class="legend"><span><i class="sw ln" style="background:var(--s1)"></i>Referrals</span><span><i class="sw ln" style="background:var(--s2)"></i>Discharges</span></div>
-          <div id="flow"></div>
-          <p class="note" id="flowNote"></p>
-        </section>
-      </div>
-
-      <div class="region-head"><h2>Are patients getting better, safely, at lower cost?</h2><p>Outcomes, quality, cost, experience, and Star Ratings</p></div>
       <div class="grid">
         <section class="panel span-7" aria-labelledby="h-out">
           <h3 id="h-out">Clinical outcomes, safety, and experience</h3>

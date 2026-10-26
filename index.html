@@ -190,7 +190,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .queue{list-style:none;margin:0;padding:0}
 .q{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
 .q:first-child{border-top:0;padding-top:0}
-.q-name{font-size:14.5px;font-weight:600}
+.q-name{appearance:none;border:0;background:none;padding:0;text-align:left;font:inherit;font-size:14.5px;font-weight:600;color:var(--ink);cursor:pointer;justify-self:start}
+.q-name:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .q-note{font-size:14px;color:var(--muted);grid-column:1}
 .q-right{grid-row:1 / 3;grid-column:2;display:flex;align-items:center;gap:10px}
 .q-count{font-size:22px;font-weight:800;min-width:2.2ch;text-align:right}
@@ -682,15 +683,15 @@ renderT2T();
 
 /* ---------- queues ---------- */
 var QUEUES=[
-  {n:1,name:"Positive item 9 without same-day risk check",note:"Standard is 100% same day",s:"crit",drill:"safety"},
-  {n:recs.length,name:"Psychiatric recommendations open 14+ days",note:"Owner is the PCP",s:"serious",drill:"recs"},
-  {n:reviewN,name:"Not improving, no psychiatric review",note:"10+ weeks in, under 50% improvement",s:"serious",drill:"review"},
-  {n:overdueN,name:"No care manager contact in 30+ days",note:"Active patients only",s:"warn",drill:"overdue"},
-  {n:29,name:"Referred, unreached after 3 attempts",note:"Last 90 days",s:"warn",drill:"unreached"},
-  {n:46,name:"Positive screens never referred",note:"Last 90 days",s:"warn",drill:"notref"},
-  {n:11,name:"Psychiatric discharges without 7-day follow-up",note:"HEDIS FUH gap",s:"serious",drill:"fuh"}
+  {n:1,name:"Positive item 9 without same-day risk check",note:"Standard is 100% same day",s:"crit",drill:"safety",def:18},
+  {n:recs.length,name:"Psychiatric recommendations open 14+ days",note:"Owner is the PCP",s:"serious",drill:"recs",def:12},
+  {n:reviewN,name:"Not improving, no psychiatric review",note:"10+ weeks in, under 50% improvement",s:"serious",drill:"review",def:11},
+  {n:overdueN,name:"No care manager contact in 30+ days",note:"Active patients only",s:"warn",drill:"overdue",def:9},
+  {n:29,name:"Referred, unreached after 3 attempts",note:"Last 90 days",s:"warn",drill:"unreached",def:7},
+  {n:46,name:"Positive screens never referred",note:"Last 90 days",s:"warn",drill:"notref",def:6},
+  {n:11,name:"Psychiatric discharges without 7-day follow-up",note:"HEDIS FUH gap",s:"serious",drill:"fuh",def:19}
 ];
-$("queues").innerHTML=QUEUES.map(function(q){return '<li class="q"><span class="q-name">'+esc(q.name)+'</span><span class="q-note">'+esc(q.note)+'</span><span class="q-right"><span class="q-count num" style="color:var(--'+(q.s==="crit"?"crit-ink":q.s==="serious"?"serious-ink":"ink")+')">'+q.n+'</span><button class="btn ghost" data-drill="'+q.drill+'" aria-label="Open '+esc(q.name)+'">Open<svg aria-hidden="true"><use href="#i-open"/></svg></button></span></li>';}).join("");
+$("queues").innerHTML=QUEUES.map(function(q){return '<li class="q"><button class="q-name" data-def="'+q.def+'" title="See how this metric is defined">'+esc(q.name)+'</button><span class="q-note">'+esc(q.note)+'</span><span class="q-right"><span class="q-count num" style="color:var(--'+(q.s==="crit"?"crit-ink":q.s==="serious"?"serious-ink":"ink")+')">'+q.n+'</span><button class="btn ghost" data-drill="'+q.drill+'" aria-label="Open '+esc(q.name)+'">Open<svg aria-hidden="true"><use href="#i-open"/></svg></button></span></li>';}).join("");
 
 /* ---------- caseload ---------- */
 var cmax=100;
